@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">
+<dimension ref="A1:H102"/>
+<sheetViews>
+<sheetView tabSelected="1" workbookViewId="0"><selection activeCell="M17" sqref="M17"/></sheetView></sheetViews>
+<sheetFormatPr defaultColWidth="11.5703125" defaultRowHeight="12.75" x14ac:dyDescent="0.2"/>
+<cols>
+	<col min="1" max="1" width="15.42578125" customWidth="1"/>
+	<col min="2" max="3" width="11.5703125" customWidth="1"/>
+	<col min="4" max="4" width="2.5703125" customWidth="1"/>
+	<col min="5" max="5" width="3.5703125" style="1" customWidth="1"/>
+	<col min="6" max="6" width="15.7109375" customWidth="1"/>
+	<col min="7" max="7" width="11.5703125" style="1" customWidth="1"/>
+</cols>
+<sheetData>
+</sheetData>
+<sheetProtection selectLockedCells="1" selectUnlockedCells="1"/>
+<mergeCells count="0">
+</mergeCells>
+<phoneticPr fontId="0" type="noConversion"/>
+<pageMargins left="0.78749999999999998" right="0.78749999999999998" top="1.0249999999999999" bottom="1.0249999999999999" header="0.78749999999999998" footer="0.78749999999999998"/>
+<pageSetup paperSize="9" orientation="portrait" useFirstPageNumber="1" horizontalDpi="300" verticalDpi="300" r:id="rId1"/>
+<headerFooter alignWithMargins="0"><oddHeader>&amp;LSorteringslista</oddHeader><oddFooter>&amp;RSida &amp;P av &amp;N</oddFooter></headerFooter>
+</worksheet>

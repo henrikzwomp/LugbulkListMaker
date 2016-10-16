@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="32" uniqueCount="15"><si><t>ElementID:</t></si><si><t>#</t></si><si><t>Ska ha</t></si><si><t>Fått</t></si><si><t>BL description:</t></si><si><t xml:space="preserve"> </t></si><si><t>BL Color:</t></si><si><t>TLG Color:</t></si><si><t>Anvisningar</t></si><si><t>- Kontrollera innan ni börja räkna att ni har tagit rätt element. Jämför ElementID på detta pappret med det på påsen.
+
+- Räkna inte högre än till 10. Använd papper och penna för att hålla koll på hur många gånger ni räknat till 10. Alternativt att göra små högar med 10 i varje.
+
+- När ni ska lägga bitarna i en påse, använd minsta möjliga. Använd inte två av samma storlek om det finns en större att använda.
+
+- Markera varje påse med Nick och mängd. Det finns pennor och maskeringstejp i lokalen för detta ändamål.
+
+- Fältet "Fått" i listan är viktigt att fylla i ifall någon får för lite eller inget alls. Ett streck räcker ifall de fått vad de ska ha.
+
+- När ni är färdiga. Lämna tillbaka detta pappret tillsammans med eventuellt överskott till LUGBULK ansvarige.
+
+- Inga bitar får lämna sorteringstillfället utan att LUGBULK ansvarige har noterat vem som tar hand om dem.</t></si><si><t>#ElementId#</t></si><si><t>#BlDescription#</t></si><si><t>#BlColor#</t></si><si><t>#TlgColor#</t></si><si><t>Mottagare</t></si></sst>
