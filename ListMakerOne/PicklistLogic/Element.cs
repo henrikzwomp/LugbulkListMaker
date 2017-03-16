@@ -12,5 +12,7 @@ namespace ListMakerOne
         public string BricklinkDescription { get; set; }
         public string BricklinkColor { get; set; }
         public string MaterialColor { get; set; }
+
+        public string BricklinkId { get; set; }
     }
 }
