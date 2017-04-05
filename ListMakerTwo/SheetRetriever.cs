@@ -14,6 +14,5 @@ namespace ListMakerTwo
             var workbook = new XLWorkbook(source_file_path);
             return workbook.Worksheets.First(x => x.Name == work_sheet_name);
         }
-
     }
 }

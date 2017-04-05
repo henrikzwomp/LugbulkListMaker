@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
+//using System.IO;
 
 namespace ListMakerTwo
 {
     public class SqlFileCreator
     {
-        public static void MakeFileForLugbulkDatabase(ISourceReader reader) // ToDo Test
+        public static IList<string> MakeFileForLugbulkDatabase(ISourceReader reader) // ToDo Test
         {
             var lines = new List<string>();
 
@@ -33,7 +33,7 @@ namespace ListMakerTwo
             foreach (var buyer in buyers)
             {
                 // [tblBuyers]: [Username], [MoneySum], [BrickAmount]
-                lines.Add(string.Format("INSERT INTO tblBuyers (Username) VALUES ('{0}')", buyer));
+                lines.Add(string.Format("INSERT INTO tblBuyers (Username) VALUES ('{0}')", buyer.Name));
             }
             lines.Add("");
 
@@ -45,11 +45,12 @@ namespace ListMakerTwo
             {
                 // [tblBuyers]: [Username], [MoneySum], [BrickAmount]
                 lines.Add(string.Format("INSERT INTO tblBuyersAmounts (Username, ElementId, Amount) VALUES ('{0}', {1}, {2})",
-                    amount.Receiver, amount.ElementID, amount.Amount));
+                    amount.Receiver.Name, amount.ElementID, amount.Amount));
             }
             lines.Add("");
 
-            File.WriteAllLines("lugbulk_data.sql", lines);
+            //File.WriteAllLines("lugbulk_data.sql", lines);
+            return lines;
         }
     }
 }

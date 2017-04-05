@@ -15,7 +15,7 @@ namespace Tests.ListMakerTwo
     public class SourceReaderTests
     {
         [Test]
-        public void CanGetElements()
+        public void SourceReader_CanGetElements()
         {
             var parameters = new InputParameters();
 
@@ -76,7 +76,7 @@ namespace Tests.ListMakerTwo
         }
 
         [Test]
-        public void CanGetBuyers()
+        public void SourceReader_CanGetBuyers()
         {
             var parameters = new InputParameters();
 
@@ -107,13 +107,13 @@ namespace Tests.ListMakerTwo
             var result = reader.GetBuyers();
 
             Assert.That(result.Count, Is.EqualTo(3));
-            Assert.That(result[0], Is.EqualTo("Henrik"));
-            Assert.That(result[1], Is.EqualTo("Alice"));
-            Assert.That(result[2], Is.EqualTo("Simpson"));
+            Assert.That(result[0].Name, Is.EqualTo("Henrik"));
+            Assert.That(result[1].Name, Is.EqualTo("Alice"));
+            Assert.That(result[2].Name, Is.EqualTo("Simpson"));
         }
 
         [Test]
-        public void CanGetAmounts()
+        public void SourceReader_CanGetAmounts()
         {
             /*
 
@@ -161,16 +161,19 @@ namespace Tests.ListMakerTwo
             cell_C4.Setup(x => x.CellRight()).Returns(cell_D4.Object);
 
             var B_address = new Mock<IXLAddress>(); B_address.SetupGet(x => x.ColumnLetter).Returns("B");
+            cell_B1.SetupGet(x => x.Address).Returns(B_address.Object);
             cell_B2.SetupGet(x => x.Address).Returns(B_address.Object);
             cell_B3.SetupGet(x => x.Address).Returns(B_address.Object);
             cell_B4.SetupGet(x => x.Address).Returns(B_address.Object);
 
             var C_address = new Mock<IXLAddress>(); C_address.SetupGet(x => x.ColumnLetter).Returns("C");
+            cell_C1.SetupGet(x => x.Address).Returns(C_address.Object);
             cell_C2.SetupGet(x => x.Address).Returns(C_address.Object);
             cell_C3.SetupGet(x => x.Address).Returns(C_address.Object);
             cell_C4.SetupGet(x => x.Address).Returns(C_address.Object);
 
             var D_address = new Mock<IXLAddress>(); D_address.SetupGet(x => x.ColumnLetter).Returns("D");
+            cell_D1.SetupGet(x => x.Address).Returns(D_address.Object);
             cell_D2.SetupGet(x => x.Address).Returns(D_address.Object);
             cell_D3.SetupGet(x => x.Address).Returns(D_address.Object);
             cell_D4.SetupGet(x => x.Address).Returns(D_address.Object);
@@ -192,16 +195,16 @@ namespace Tests.ListMakerTwo
 
             var result = reader.GetAmounts();
             Assert.That(result.Count, Is.EqualTo(6));
-            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver == "Henrik" && x.Amount == 100));
-            Assert.True(result.Any(x => x.ElementID == "444444" && x.Receiver == "Henrik" && x.Amount == 150));
-            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver == "Alice" && x.Amount == 50));
-            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver == "Alice" && x.Amount == 100));
-            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver == "Simpson" && x.Amount == 200));
-            Assert.True(result.Any(x => x.ElementID == "444444" && x.Receiver == "Simpson" && x.Amount == 300));
+            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver.Name == "Henrik" && x.Amount == 100));
+            Assert.True(result.Any(x => x.ElementID == "444444" && x.Receiver.Name == "Henrik" && x.Amount == 150));
+            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver.Name == "Alice" && x.Amount == 50));
+            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver.Name == "Alice" && x.Amount == 100));
+            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver.Name == "Simpson" && x.Amount == 200));
+            Assert.True(result.Any(x => x.ElementID == "444444" && x.Receiver.Name == "Simpson" && x.Amount == 300));
         }
 
         [Test]
-        public void WillIgnoreZeroAndNonNumbers()
+        public void SourceReader_WillIgnoreZeroAndNonNumbers()
         {
             /*
 
@@ -235,10 +238,12 @@ namespace Tests.ListMakerTwo
             cell_B3.Setup(x => x.CellRight()).Returns(cell_C3.Object);
 
             var B_address = new Mock<IXLAddress>(); B_address.SetupGet(x => x.ColumnLetter).Returns("B");
+            cell_B1.SetupGet(x => x.Address).Returns(B_address.Object);
             cell_B2.SetupGet(x => x.Address).Returns(B_address.Object);
             cell_B3.SetupGet(x => x.Address).Returns(B_address.Object);
 
             var C_address = new Mock<IXLAddress>(); C_address.SetupGet(x => x.ColumnLetter).Returns("C");
+            cell_C1.SetupGet(x => x.Address).Returns(C_address.Object);
             cell_C2.SetupGet(x => x.Address).Returns(C_address.Object);
             cell_C3.SetupGet(x => x.Address).Returns(C_address.Object);
 
@@ -257,8 +262,8 @@ namespace Tests.ListMakerTwo
 
             var result = reader.GetAmounts();
             Assert.That(result.Count, Is.EqualTo(2));
-            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver == "Henrik" && x.Amount == 100));
-            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver == "Alice" && x.Amount == 100));
+            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver.Name == "Henrik" && x.Amount == 100));
+            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver.Name == "Alice" && x.Amount == 100));
         }
     }
 }

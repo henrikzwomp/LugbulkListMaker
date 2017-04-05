@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ListMakerOne;
 using ClosedXML.Excel;
 
 namespace ListMakerTwo
@@ -17,9 +16,9 @@ namespace ListMakerTwo
 
     public interface ISourceReader
     {
-        IList<Element> GetElements();
-        IList<string> GetBuyers();
-        IList<ElementReservation> GetAmounts();
+        IList<LugBulkElement> GetElements();
+        IList<LugBulkReceiver> GetBuyers();
+        IList<LugBulkReservation> GetAmounts();
     }
 
     public class SourceReader : ISourceReader
@@ -33,9 +32,11 @@ namespace ListMakerTwo
             _parameters = parameters;
         }
 
-        public IList<ElementReservation> GetAmounts() // ToDo test
+        public IList<LugBulkReservation> GetAmounts()
         {
-            var result = new List<ElementReservation>();
+            var result = new List<LugBulkReservation>();
+
+            var buyers_list = GetBuyers();
 
             var Element_Row_Span_Start = 0;
             var Element_Row_Span_End = 0;
@@ -68,10 +69,10 @@ namespace ListMakerTwo
                                 _parameters.ElementIdColumn).Value.ToString().Trim();
                             var buyer = buyer_cell.Value.ToString().Trim();
 
-                            var reservation = new ElementReservation()
+                            var reservation = new LugBulkReservation()
                             {
                                 ElementID = elementid,
-                                Receiver = buyer,
+                                Receiver = buyers_list.Where(x => x.Name == buyer).First(),
                                 Amount = amount
                             };
 
@@ -91,9 +92,9 @@ namespace ListMakerTwo
             return result;
         }
 
-        public IList<string> GetBuyers()
+        public IList<LugBulkReceiver> GetBuyers()
         {
-            var result = new List<string>();
+            var result = new List<LugBulkReceiver>();
 
             var Buyers_Column_Span_Start = "";
             var Buyers_Column_Span_End = "";
@@ -104,23 +105,27 @@ namespace ListMakerTwo
 
             var buyer_cell = _work_sheet.Cell(_parameters.BuyersRow, Buyers_Column_Span_Start);
 
+            var buyer_id = 100; // ToDo Test
+
             while (true)
             {
                 var buyer = buyer_cell.Value.ToString().Trim();
-                result.Add(buyer);
+                result.Add(new LugBulkReceiver() { Name = buyer, Id = buyer_id });
 
                 if (buyer_cell.Address.ColumnLetter == Buyers_Column_Span_End)
                     break;
 
                 buyer_cell = buyer_cell.CellRight();
+
+                buyer_id++;
             }
 
             return result;
         }
 
-        public IList<Element> GetElements()
+        public IList<LugBulkElement> GetElements()
         {
-            var result = new List<Element>();
+            var result = new List<LugBulkElement>();
 
             var Element_Row_Span_Start = 0;
             var Element_Row_Span_End = 0;
@@ -134,7 +139,7 @@ namespace ListMakerTwo
                 var blid = _work_sheet.Cell(i, _parameters.BrickLinkIdColumn).Value.ToString().Trim();
                 var blcolor = _work_sheet.Cell(i, _parameters.BrickLinkColorColumn).Value.ToString().Trim();
 
-                result.Add(new Element()
+                result.Add(new LugBulkElement()
                 {
                     ElementID = elementid,
                     BricklinkDescription = description,
