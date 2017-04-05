@@ -33,19 +33,24 @@ namespace ListMakerTwo
 
             var picklists = LugBulkPicklistCreator.CreateLists(reader.GetAmounts(), reader.GetElements());
 
-            ///--
             //var picklist = picklists.Where(x => x.ElementID == "6148262").First();
-            var picklist = picklists.First();
-            File.Copy("Template01.xlsx", picklist.ElementID + ".xlsx", true);
+            //var picklist = picklists.First();
 
-            var workbook = new XLWorkbook(picklist.ElementID + ".xlsx");
-            var work_sheet = workbook.Worksheets.First();
+            if (!Directory.Exists("output"))
+                Directory.CreateDirectory("output");
 
-            PicklistXlsxFileCreator.Create(work_sheet, picklist);
+            foreach (var picklist in picklists)
+            {
+                File.Copy("Template01.xlsx", "output\\" + picklist.ElementID + ".xlsx", true);
 
-            workbook.Save();
+                var workbook = new XLWorkbook("output\\" + picklist.ElementID + ".xlsx");
+                var work_sheet = workbook.Worksheets.First();
 
-            ///--
+                PicklistXlsxFileCreator.Create(work_sheet, picklist);
+
+                workbook.Save();
+            }
+            
 
             // SqlFileCreator.MakeFileForLugbulkDatabase(reader);
         }
