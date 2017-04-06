@@ -105,7 +105,7 @@ namespace ListMakerTwo
 
             var buyer_cell = _work_sheet.Cell(_parameters.BuyersRow, Buyers_Column_Span_Start);
 
-            var buyer_id = 100; // ToDo Test
+            var buyer_id = 100;
 
             while (true)
             {

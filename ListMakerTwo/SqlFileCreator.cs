@@ -9,7 +9,7 @@ namespace ListMakerTwo
 {
     public class SqlFileCreator
     {
-        public static IList<string> MakeFileForLugbulkDatabase(ISourceReader reader) // ToDo Test
+        public static IList<string> MakeFileForLugbulkDatabase(ISourceReader reader)
         {
             var lines = new List<string>();
 

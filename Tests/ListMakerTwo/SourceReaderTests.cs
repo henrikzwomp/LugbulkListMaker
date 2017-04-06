@@ -109,6 +109,9 @@ namespace Tests.ListMakerTwo
             Assert.That(result[0].Name, Is.EqualTo("Henrik"));
             Assert.That(result[1].Name, Is.EqualTo("Alice"));
             Assert.That(result[2].Name, Is.EqualTo("Simpson"));
+            Assert.That(result[0].Id, Is.EqualTo(100));
+            Assert.That(result[1].Id, Is.EqualTo(101));
+            Assert.That(result[2].Id, Is.EqualTo(102));
         }
 
         [Test]

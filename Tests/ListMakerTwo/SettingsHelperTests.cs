@@ -12,7 +12,7 @@ namespace Tests.ListMakerTwo
     public class SettingsHelperTests
     {
         [Test]
-        public void CanSplitString()
+        public void SettingsHelperTests_CanSplitString()
         {
             var part1 = "";
             var part2 = "";
@@ -23,7 +23,7 @@ namespace Tests.ListMakerTwo
         }
 
         [Test]
-        public void CanSplitInt()
+        public void SettingsHelperTests_CanSplitInt()
         {
             var part1 = 0;
             var part2 = 0;

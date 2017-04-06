@@ -8,9 +8,9 @@ using System.IO;
 
 namespace ListMakerTwo
 {
-    public class PicklistXlsxFileCreator // ToDo Test
+    public class PicklistXlsxFileCreator
     {
-        public static void Create(IXLWorksheet work_sheet, LugBulkPicklist picklist) // string template_file_path
+        public static void Create(IXLWorksheet work_sheet, LugBulkPicklist picklist)
         {
             int line_count = 0;
 
@@ -30,13 +30,13 @@ namespace ListMakerTwo
             int page_two_ends_at = 112;
             int page_two_buyers_row_start = 58;
             int page_two_buyers_row_end = 112;
-            int page_two_instruction_box_row = 56;
+            int page_one_instruction_box_ends_at_row = 39;
 
             if (line_count >= picklist.Reservations.Count)
             {
                 DeletePageTwoElementInfo(work_sheet, 
-                    page_two_starts_at, page_two_ends_at, 
-                    page_two_instruction_box_row);
+                    page_two_starts_at, page_two_ends_at,
+                    page_one_instruction_box_ends_at_row);
             }
             else
             {
@@ -51,12 +51,15 @@ namespace ListMakerTwo
         }
 
         private static void DeletePageTwoElementInfo(IXLWorksheet work_sheet, 
-            int page_two_start_at, int page_two_ends_at, int page_two_instruction_box_row)
+            int page_two_start_at, int page_two_ends_at, int page_one_instruction_box_ends_at_row)
         {
             work_sheet.Rows(page_two_start_at, page_two_ends_at).Delete();
 
-            work_sheet.MergedRanges.Where(x => x.FirstCell().Address.RowNumber == page_two_instruction_box_row).First()
-                .Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            while(work_sheet.MergedRanges.Any(x => x.FirstCell().Address.RowNumber > page_one_instruction_box_ends_at_row))
+            {
+                work_sheet.MergedRanges.Where(x => x.FirstCell().Address.RowNumber > page_one_instruction_box_ends_at_row).First()
+                    .Delete(XLShiftDeletedCells.ShiftCellsLeft);
+            }
         }
 
         private static void SetElementInfo(IXLWorksheet work_sheet, LugBulkPicklist picklist, int origin_row)

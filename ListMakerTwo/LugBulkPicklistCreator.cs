@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ListMakerTwo
 {
-    public class LugBulkPicklistCreator // ToDo Copy tests
+    public class LugBulkPicklistCreator
     {
         public static IList<LugBulkPicklist> CreateLists(IList<LugBulkReservation> reservations, IList<LugBulkElement> elements)
         {
