@@ -100,28 +100,51 @@ namespace ListMakerTwo
 
             _buyers = new List<LugBulkBuyer>();
 
-            var Buyers_Column_Span_Start = "";
-            var Buyers_Column_Span_End = "";
+            var buyers_column_span_start = "";
+            var buyers_column_span_end = "";
             SettingsHelper.ReadSpan(_parameters.BuyersColumnSpan,
-                out Buyers_Column_Span_Start, out Buyers_Column_Span_End);
+                out buyers_column_span_start, out buyers_column_span_end);
 
-            var current_col =  Buyers_Column_Span_Start;
+            var element_row_span_start = 0;
+            var element_row_span_end = 0;
+            SettingsHelper.ReadSpan(_parameters.ElementRowSpan,
+                out element_row_span_start, out element_row_span_end);
 
-            var buyer_cell = _work_sheet.Cell(_parameters.BuyersRow, Buyers_Column_Span_Start);
+            var current_col =  buyers_column_span_start;
+
+            var buyer_cell = _work_sheet.Cell(_parameters.BuyersRow, buyers_column_span_start);
 
             var buyer_id = 100;
 
             while (true)
             {
-                var buyer = buyer_cell.Value.ToString().Trim();
-                _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = buyer_id });
+                // Check for reservations
+                // ToDo will break tests
+                // ToDo Test
+                var found_reservations = false;
+                for(int i = element_row_span_start; i <= element_row_span_end; i++)
+                {
+                    var reservation_value = _work_sheet.Cell(i, buyer_cell.Address.ColumnNumber)
+                        .Value.ToString().Trim();
 
-                if (buyer_cell.Address.ColumnLetter == Buyers_Column_Span_End)
+                    if (reservation_value != "" && reservation_value != "0")
+                    {
+                        found_reservations = true;
+                        break;
+                    }
+                }
+
+                if (found_reservations)
+                {
+                    var buyer = buyer_cell.Value.ToString().Trim();
+                    _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = buyer_id });
+                    buyer_id++;
+                }
+
+                if (buyer_cell.Address.ColumnLetter == buyers_column_span_end)
                     break;
 
                 buyer_cell = buyer_cell.CellRight();
-
-                buyer_id++;
             }
 
             return _buyers;
@@ -145,6 +168,7 @@ namespace ListMakerTwo
                 var description = _work_sheet.Cell(i, _parameters.BrickLinkDescriptionColumn).Value.ToString().Trim();
                 var blid = _work_sheet.Cell(i, _parameters.BrickLinkIdColumn).Value.ToString().Trim();
                 var blcolor = _work_sheet.Cell(i, _parameters.BrickLinkColorColumn).Value.ToString().Trim();
+                var material_color = _work_sheet.Cell(i, _parameters.TlgColorColumn).Value.ToString().Trim();
 
                 _elements.Add(new LugBulkElement()
                 {
@@ -152,7 +176,7 @@ namespace ListMakerTwo
                     BricklinkDescription = description,
                     BricklinkId = blid,
                     BricklinkColor = blcolor,
-                    MaterialColor = ""
+                    MaterialColor = material_color
                 });
             }
 
