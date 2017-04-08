@@ -34,10 +34,10 @@ namespace Tests.ListMakerTwo
                 new LugBulkElement() { ElementID = "55555", BricklinkId = "551b",
                     BricklinkDescription = "Something", BricklinkColor = "Red" } });
 
-            reader.Setup(x => x.GetBuyers()).Returns(new List<LugBulkReceiver>() { new LugBulkReceiver() { Name = "Henrik" } });
+            reader.Setup(x => x.GetBuyers()).Returns(new List<LugBulkBuyer>() { new LugBulkBuyer() { Name = "Henrik" } });
 
-            reader.Setup(x => x.GetAmounts()).Returns(new List<LugBulkReservation>() {
-                new LugBulkReservation() { ElementID = "33333", Receiver = new LugBulkReceiver() { Name = "Alice" }, Amount = 200 }
+            reader.Setup(x => x.GetReservations()).Returns(new List<LugBulkReservation>() {
+                new LugBulkReservation() { Element = new LugBulkElement() { ElementID = "33333" }, Buyer = new LugBulkBuyer() { Name = "Alice" }, Amount = 200 }
             });
 
             var result = SqlFileCreator.MakeFileForLugbulkDatabase(reader.Object);

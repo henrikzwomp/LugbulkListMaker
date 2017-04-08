@@ -40,12 +40,12 @@ namespace ListMakerTwo
             // Amounts
             // [tblBuyersAmounts]: [Username], [ElementId], [Amount], [Difference]
             lines.Add("-- Amounts --");
-            var amounts = reader.GetAmounts();
+            var amounts = reader.GetReservations();
             foreach (var amount in amounts)
             {
                 // [tblBuyers]: [Username], [MoneySum], [BrickAmount]
                 lines.Add(string.Format("INSERT INTO tblBuyersAmounts (Username, ElementId, Amount) VALUES ('{0}', {1}, {2})",
-                    amount.Receiver.Name, amount.ElementID, amount.Amount));
+                    amount.Buyer.Name, amount.Element.ElementID, amount.Amount));
             }
             lines.Add("");
 

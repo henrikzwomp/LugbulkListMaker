@@ -8,8 +8,8 @@ namespace ListMakerTwo
 {
     public struct LugBulkReservation
     {
-        public string ElementID { get; set; }
-        public LugBulkReceiver Receiver { get; set; }
+        public LugBulkElement Element { get; set; }
+        public LugBulkBuyer Buyer { get; set; }
         public int Amount { get; set; }
     }
 }

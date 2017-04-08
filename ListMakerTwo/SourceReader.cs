@@ -7,18 +7,11 @@ using ClosedXML.Excel;
 
 namespace ListMakerTwo
 {
-    /*
-            var reader = new SourceReader(source_sheet, parameters);
-            var elements = SourceReader.GetElements();
-            var buyers = SourceReader.GetBuyers();
-            var amounts = SourceReader.GetAmounts();
-            */
-
     public interface ISourceReader
     {
         IList<LugBulkElement> GetElements();
-        IList<LugBulkReceiver> GetBuyers();
-        IList<LugBulkReservation> GetAmounts();
+        IList<LugBulkBuyer> GetBuyers();
+        IList<LugBulkReservation> GetReservations();
     }
 
     public class SourceReader : ISourceReader
@@ -26,17 +19,25 @@ namespace ListMakerTwo
         private IXLWorksheet _work_sheet;
         private InputParameters _parameters;
 
+        IList<LugBulkReservation> _reservations;
+        IList<LugBulkBuyer> _buyers;
+        IList<LugBulkElement> _elements;
+
         public SourceReader(IXLWorksheet work_sheet, InputParameters parameters)
         {
             _work_sheet = work_sheet;
             _parameters = parameters;
         }
 
-        public IList<LugBulkReservation> GetAmounts()
+        public IList<LugBulkReservation> GetReservations()
         {
-            var result = new List<LugBulkReservation>();
+            if (_reservations != null)
+                return _reservations;
+
+            _reservations = new List<LugBulkReservation>();
 
             var buyers_list = GetBuyers();
+            var elements_list = GetElements();
 
             var Element_Row_Span_Start = 0;
             var Element_Row_Span_End = 0;
@@ -71,12 +72,12 @@ namespace ListMakerTwo
 
                             var reservation = new LugBulkReservation()
                             {
-                                ElementID = elementid,
-                                Receiver = buyers_list.Where(x => x.Name == buyer).First(),
+                                Element = elements_list.Where(x => x.ElementID == elementid).First(),
+                                Buyer = buyers_list.Where(x => x.Name == buyer).First(),
                                 Amount = amount
                             };
 
-                            result.Add(reservation);
+                            _reservations.Add(reservation);
                         }
                     }
 
@@ -89,12 +90,15 @@ namespace ListMakerTwo
 
             }
 
-            return result;
+            return _reservations;
         }
 
-        public IList<LugBulkReceiver> GetBuyers()
+        public IList<LugBulkBuyer> GetBuyers()
         {
-            var result = new List<LugBulkReceiver>();
+            if (_buyers != null)
+                return _buyers;
+
+            _buyers = new List<LugBulkBuyer>();
 
             var Buyers_Column_Span_Start = "";
             var Buyers_Column_Span_End = "";
@@ -110,7 +114,7 @@ namespace ListMakerTwo
             while (true)
             {
                 var buyer = buyer_cell.Value.ToString().Trim();
-                result.Add(new LugBulkReceiver() { Name = buyer, Id = buyer_id });
+                _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = buyer_id });
 
                 if (buyer_cell.Address.ColumnLetter == Buyers_Column_Span_End)
                     break;
@@ -120,12 +124,15 @@ namespace ListMakerTwo
                 buyer_id++;
             }
 
-            return result;
+            return _buyers;
         }
 
         public IList<LugBulkElement> GetElements()
         {
-            var result = new List<LugBulkElement>();
+            if (_elements != null)
+                return _elements;
+
+            _elements = new List<LugBulkElement>();
 
             var Element_Row_Span_Start = 0;
             var Element_Row_Span_End = 0;
@@ -139,7 +146,7 @@ namespace ListMakerTwo
                 var blid = _work_sheet.Cell(i, _parameters.BrickLinkIdColumn).Value.ToString().Trim();
                 var blcolor = _work_sheet.Cell(i, _parameters.BrickLinkColorColumn).Value.ToString().Trim();
 
-                result.Add(new LugBulkElement()
+                _elements.Add(new LugBulkElement()
                 {
                     ElementID = elementid,
                     BricklinkDescription = description,
@@ -149,7 +156,7 @@ namespace ListMakerTwo
                 });
             }
 
-            return result;
+            return _elements;
         }
     }
 }

@@ -75,8 +75,8 @@ namespace ListMakerTwo
         {
             if (line_count < picklist.Reservations.Count)
             {
-                work_sheet.Cell(current_line, "E").Value = picklist.Reservations[line_count].Receiver.Id;
-                work_sheet.Cell(current_line, "F").Value = picklist.Reservations[line_count].Receiver.Name;
+                work_sheet.Cell(current_line, "E").Value = picklist.Reservations[line_count].Buyer.Id;
+                work_sheet.Cell(current_line, "F").Value = picklist.Reservations[line_count].Buyer.Name;
                 work_sheet.Cell(current_line, "G").Value = picklist.Reservations[line_count].Amount;
             }
             else

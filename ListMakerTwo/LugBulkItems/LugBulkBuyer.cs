@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ListMakerTwo
 {
-    public class LugBulkReceiver
+    public class LugBulkBuyer
     {
         public int Id { get; set; }
         public string Name { get; set; }

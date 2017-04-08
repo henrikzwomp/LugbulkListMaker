@@ -54,7 +54,7 @@ namespace Tests.ListMakerTwo
             picklist.MaterialColor = "Brick Yellow";
 
             for (int i = 0; i < 60; i++)
-                picklist.Reservations.Add(new LugBulkReservation() { Receiver = new LugBulkReceiver() });
+                picklist.Reservations.Add(new LugBulkReservation() { Buyer = new LugBulkBuyer() });
 
             PicklistXlsxFileCreator.Create(work_sheet, picklist);
 
@@ -77,7 +77,7 @@ namespace Tests.ListMakerTwo
 
             for (int i = 0; i < 30; i++)
                 picklist.Reservations.Add(new LugBulkReservation() {
-                    Receiver = new LugBulkReceiver() { Id = i, Name = ("B" + i.ToString()) } });
+                    Buyer = new LugBulkBuyer() { Id = i, Name = ("B" + i.ToString()) } });
 
             PicklistXlsxFileCreator.Create(work_sheet, picklist);
 
@@ -102,7 +102,7 @@ namespace Tests.ListMakerTwo
             for (int i = 0; i < 90; i++)
                 picklist.Reservations.Add(new LugBulkReservation()
                 {
-                    Receiver = new LugBulkReceiver() { Id = i, Name = ("B" + i.ToString()) }
+                    Buyer = new LugBulkBuyer() { Id = i, Name = ("B" + i.ToString()) }
                 });
 
             PicklistXlsxFileCreator.Create(work_sheet, picklist);
@@ -128,7 +128,7 @@ namespace Tests.ListMakerTwo
             for (int i = 0; i < 30; i++)
                 picklist.Reservations.Add(new LugBulkReservation()
                 {
-                    Receiver = new LugBulkReceiver() { Id = i, Name = ("B" + i.ToString()) }
+                    Buyer = new LugBulkBuyer() { Id = i, Name = ("B" + i.ToString()) }
                 });
 
             for (int i = 31; i < 90; i++)

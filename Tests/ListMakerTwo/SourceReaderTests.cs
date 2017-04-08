@@ -133,6 +133,12 @@ namespace Tests.ListMakerTwo
             parameters.BuyersRow = 1;
             parameters.BuyersColumnSpan = "B:D";
 
+            // Reusing columns to simplify test
+            parameters.BrickLinkDescriptionColumn = "A";
+            parameters.BrickLinkIdColumn = "A";
+            parameters.BrickLinkColorColumn = "A";
+            parameters.TlgColorColumn = "A";
+
             var cell_A1 = new Mock<IXLCell>(); cell_A1.SetupGet(x => x.Value).Returns("");
             var cell_A2 = new Mock<IXLCell>(); cell_A2.SetupGet(x => x.Value).Returns("222222");
             var cell_A3 = new Mock<IXLCell>(); cell_A3.SetupGet(x => x.Value).Returns("333333");
@@ -195,14 +201,14 @@ namespace Tests.ListMakerTwo
 
             var reader = new SourceReader(sheet.Object, parameters);
 
-            var result = reader.GetAmounts();
+            var result = reader.GetReservations();
             Assert.That(result.Count, Is.EqualTo(6));
-            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver.Name == "Henrik" && x.Amount == 100));
-            Assert.True(result.Any(x => x.ElementID == "444444" && x.Receiver.Name == "Henrik" && x.Amount == 150));
-            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver.Name == "Alice" && x.Amount == 50));
-            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver.Name == "Alice" && x.Amount == 100));
-            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver.Name == "Simpson" && x.Amount == 200));
-            Assert.True(result.Any(x => x.ElementID == "444444" && x.Receiver.Name == "Simpson" && x.Amount == 300));
+            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Henrik" && x.Amount == 100));
+            Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Henrik" && x.Amount == 150));
+            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Alice" && x.Amount == 50));
+            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Alice" && x.Amount == 100));
+            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Simpson" && x.Amount == 200));
+            Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Simpson" && x.Amount == 300));
         }
 
         [Test]
@@ -222,6 +228,12 @@ namespace Tests.ListMakerTwo
             parameters.ElementIdColumn = "A";
             parameters.BuyersRow = 1;
             parameters.BuyersColumnSpan = "B:C";
+
+            // Reusing columns to simplify test
+            parameters.BrickLinkDescriptionColumn = "A";
+            parameters.BrickLinkIdColumn = "A";
+            parameters.BrickLinkColorColumn = "A";
+            parameters.TlgColorColumn = "A";
 
             var cell_A1 = new Mock<IXLCell>(); cell_A1.SetupGet(x => x.Value).Returns("");
             var cell_A2 = new Mock<IXLCell>(); cell_A2.SetupGet(x => x.Value).Returns("222222");
@@ -262,10 +274,10 @@ namespace Tests.ListMakerTwo
 
             var reader = new SourceReader(sheet.Object, parameters);
 
-            var result = reader.GetAmounts();
+            var result = reader.GetReservations();
             Assert.That(result.Count, Is.EqualTo(2));
-            Assert.True(result.Any(x => x.ElementID == "222222" && x.Receiver.Name == "Henrik" && x.Amount == 100));
-            Assert.True(result.Any(x => x.ElementID == "333333" && x.Receiver.Name == "Alice" && x.Amount == 100));
+            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Henrik" && x.Amount == 100));
+            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Alice" && x.Amount == 100));
         }
     }
 }
