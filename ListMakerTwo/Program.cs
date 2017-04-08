@@ -23,7 +23,7 @@ namespace ListMakerTwo
                 BrickLinkDescriptionColumn = "B",
                 BrickLinkIdColumn = "C",
                 BrickLinkColorColumn = "E",
-                TlgColorColumn = ""
+                TlgColorColumn = "G" // ToDo
             };
 
             var sheet = SheetRetriever.Get(parameters.SourceFileName,
@@ -57,18 +57,25 @@ namespace ListMakerTwo
             var workbook = new XLWorkbook();
             var work_sheet = workbook.AddWorksheet("Master List");
 
+            work_sheet.Cell(1, "A").Value = "Buyer.Id"; work_sheet.Cell(1, "A").Style.Font.Bold = true;
+            work_sheet.Cell(1, "B").Value = "Buyer.Name"; work_sheet.Cell(1, "B").Style.Font.Bold = true;
+            work_sheet.Cell(1, "C").Value = "Element.ElementID"; work_sheet.Cell(1, "C").Style.Font.Bold = true;
+            work_sheet.Cell(1, "D").Value = "Element.BricklinkId"; work_sheet.Cell(1, "D").Style.Font.Bold = true;
+            work_sheet.Cell(1, "E").Value = "Element.BricklinkDescription"; work_sheet.Cell(1, "E").Style.Font.Bold = true;
+            work_sheet.Cell(1, "F").Value = "Element.BricklinkColor"; work_sheet.Cell(1, "F").Style.Font.Bold = true;
+            work_sheet.Cell(1, "G").Value = "Element.MaterialColor"; work_sheet.Cell(1, "G").Style.Font.Bold = true;
+            work_sheet.Cell(1, "H").Value = "Amount"; work_sheet.Cell(1, "H").Style.Font.Bold = true;
+
             int line_count = 2;
             foreach (var reservation in reservations)
             {
                 work_sheet.Cell(line_count, "A").Value = reservation.Buyer.Id;
                 work_sheet.Cell(line_count, "B").Value = reservation.Buyer.Name;
-
                 work_sheet.Cell(line_count, "C").Value = reservation.Element.ElementID;
                 work_sheet.Cell(line_count, "D").Value = reservation.Element.BricklinkId;
                 work_sheet.Cell(line_count, "E").Value = reservation.Element.BricklinkDescription;
                 work_sheet.Cell(line_count, "F").Value = reservation.Element.BricklinkColor;
                 work_sheet.Cell(line_count, "G").Value = reservation.Element.MaterialColor;
-
                 work_sheet.Cell(line_count, "H").Value = reservation.Amount;
                 line_count++;
             }

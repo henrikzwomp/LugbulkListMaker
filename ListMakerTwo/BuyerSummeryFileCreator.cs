@@ -15,23 +15,60 @@ namespace ListMakerTwo
             work_sheet.Cell(1, "A").Value = buyer.Id; // ToDo Test
             work_sheet.Cell(11, "A").Value = buyer.Name; // ToDo Test
 
-            int line_count = 15;
+            var previous_color = "";
+
+            int reservation_start_line = 14;
+
+            int line_count = reservation_start_line;
+            int column_offset = 0;
             foreach (var reservation in reservations
                 .OrderBy(x => x.Element.BricklinkColor)
                 .ThenBy(x => x.Element.ElementID)) // ToDo Test
             {
-                work_sheet.Cell(line_count, "A").Value = reservation.Element.BricklinkColor;
-                work_sheet.Cell(line_count, "B").Value = reservation.Element.ElementID;
-                work_sheet.Cell(line_count, "C").Value = reservation.Amount;
+                var current_color = reservation.Element.BricklinkColor;
+
+                if(current_color != previous_color)  // ToDo Test
+                {
+                    work_sheet.Range(line_count, 1 + column_offset, line_count, 3 + column_offset).Merge();
+                    work_sheet.Cell(line_count, 1 + column_offset).Value = current_color;
+                    work_sheet.Cell(line_count, 1 + column_offset).Style.Font.Bold = true;
+                    work_sheet.Cell(line_count, 1 + column_offset).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
+                    line_count++;
+                }
+
+                work_sheet.Cell(line_count, 1 + column_offset).Value = reservation.Element.ElementID;  // ToDo Test
+                work_sheet.Cell(line_count, 1 + column_offset).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
+
+                work_sheet.Cell(line_count, 2 + column_offset).Value = reservation.Amount;
+                work_sheet.Cell(line_count, 2 + column_offset).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                work_sheet.Cell(line_count, 1 + column_offset).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
+                work_sheet.Cell(line_count, 2 + column_offset).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
+                work_sheet.Cell(line_count, 3 + column_offset).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
+
+                work_sheet.Cell(line_count, 1 + column_offset).Style.Border.SetLeftBorder(XLBorderStyleValues.Thin);
+                work_sheet.Cell(line_count, 2 + column_offset).Style.Border.SetLeftBorder(XLBorderStyleValues.Thin);
+                work_sheet.Cell(line_count, 3 + column_offset).Style.Border.SetLeftBorder(XLBorderStyleValues.Thin);
+
+                work_sheet.Cell(line_count, 1 + column_offset).Style.Border.SetRightBorder(XLBorderStyleValues.Thin);
+                work_sheet.Cell(line_count, 2 + column_offset).Style.Border.SetRightBorder(XLBorderStyleValues.Thin);
+                work_sheet.Cell(line_count, 3 + column_offset).Style.Border.SetRightBorder(XLBorderStyleValues.Thin);
+
+                if(line_count == reservation_start_line) // ToDo Test
+                {
+                    work_sheet.Cell(line_count, 1 + column_offset).Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
+                    work_sheet.Cell(line_count, 2 + column_offset).Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
+                    work_sheet.Cell(line_count, 3 + column_offset).Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
+                }
+
+                previous_color = current_color;
                 line_count++;
-            }
 
-            if (line_count >= 50) // ToDo Test?
-                return;
-
-            for(int i = 50; i >= line_count; i--) // ToDo Test
-            {
-                work_sheet.Row(i).Delete();
+                if(line_count >= 48) // ToDo Test
+                {
+                    line_count = reservation_start_line;
+                    column_offset = 4;
+                }
             }
         }
     }
