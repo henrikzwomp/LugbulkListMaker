@@ -72,9 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="LUGBULK 2017 beställning färdig.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="packages.config" />
     <Content Include="Templates\PicklistTemplate01.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
