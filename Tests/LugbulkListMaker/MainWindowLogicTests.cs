@@ -212,6 +212,7 @@ namespace Tests.LugbulkListMaker
 
             var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object);
 
+            // ElementIdSpan
             Assert.That(logic.ElementIdSpanText, Is.Empty);
             Assert.That(logic.ElementIdSpanBackground.Color.ToString(), Is.EqualTo(Colors.White.ToString()));
 
@@ -220,6 +221,48 @@ namespace Tests.LugbulkListMaker
 
             logic.ElementIdSpanText = "A1:C5";
             Assert.That(logic.ElementIdSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightGreen.ToString()));
+
+            // BuyersNamesSpan
+            Assert.That(logic.BuyersNamesSpanText, Is.Empty);
+            Assert.That(logic.BuyersNamesSpanBackground.Color.ToString(), Is.EqualTo(Colors.White.ToString()));
+
+            logic.BuyersNamesSpanText = "A";
+            Assert.That(logic.BuyersNamesSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightPink.ToString()));
+
+            logic.BuyersNamesSpanText = "A1:C5";
+            Assert.That(logic.BuyersNamesSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightGreen.ToString()));
+
+            // BlDescSpan
+            Assert.That(logic.BlDescSpanText, Is.Empty);
+            Assert.That(logic.BlDescSpanBackground.Color.ToString(), Is.EqualTo(Colors.White.ToString()));
+
+            logic.BlDescSpanText = "A";
+            Assert.That(logic.BlDescSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightPink.ToString()));
+
+            logic.BlDescSpanText = "A1:C5";
+            Assert.That(logic.BlDescSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightGreen.ToString()));
+
+            // BlColorSpan
+            Assert.That(logic.BlColorSpanText, Is.Empty);
+            Assert.That(logic.BlColorSpanBackground.Color.ToString(), Is.EqualTo(Colors.White.ToString()));
+
+            logic.BlColorSpanText = "A";
+            Assert.That(logic.BlColorSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightPink.ToString()));
+
+            logic.BlColorSpanText = "A1:C5";
+            Assert.That(logic.BlColorSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightGreen.ToString()));
+
+            // TlgColorSpan
+            Assert.That(logic.TlgColorSpanText, Is.Empty);
+            Assert.That(logic.TlgColorSpanBackground.Color.ToString(), Is.EqualTo(Colors.White.ToString()));
+
+            logic.TlgColorSpanText = "A";
+            Assert.That(logic.TlgColorSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightPink.ToString()));
+
+            logic.TlgColorSpanText = "A1:C5";
+            Assert.That(logic.TlgColorSpanBackground.Color.ToString(), Is.EqualTo(Colors.LightGreen.ToString()));
+
+
         }
     }
 }

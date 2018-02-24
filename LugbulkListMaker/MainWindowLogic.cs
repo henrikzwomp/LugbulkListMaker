@@ -10,25 +10,27 @@ using System.Windows.Media;
 
 namespace LugbulkListMaker
 {
-    /*
-     * ToDo
-     * - Reload on Sheet selection change
-     * - Test everything :)
-     * */
-
     public class MainWindowLogic : ViewModelBase
     {
         IOutsideWindowHelper _outside_helper;
         string _selected_file_path;
         IXLWorkbook _workbook = null;
         IDataGridWorker _input_data_grid;
+        HighlightWorker _highlight_worker;
+
+        private Color _element_id_span_highlight_color = Colors.Lavender;
+        private Color _buyers_names_span_highlight_color = Colors.Moccasin;
+        private Color _bl_desc_span_highlight_color = Colors.LightGoldenrodYellow;
+        private Color _bl_color_span_highlight_color = Colors.MistyRose;
+        private Color _tlg_color_span_highlight_color = Colors.PaleTurquoise;
 
         const string _no_file_selected_text = "[None]";
 
         public MainWindowLogic(IOutsideWindowHelper outside_helper, IDataGridWorker input_data_grid)
         {
             _outside_helper = outside_helper;
-            _input_data_grid = input_data_grid; 
+            _input_data_grid = input_data_grid;
+            _highlight_worker = new HighlightWorker(_input_data_grid); // ToDo move
         }
 
         private void SelectAInputFile()
@@ -121,16 +123,33 @@ namespace LugbulkListMaker
                 //_input_data_grid.Items.Add(values);
                 FileData.Add(values);
             }
+
         }
-        private Color ValidateSpanText(string span_text)
+
+        // ToDo Test
+        private void ValidateSpanText(string span_text, SolidColorBrush background, Color highlight)
         {
-            if(string.IsNullOrEmpty(span_text))
-                return Colors.White;
+            if(string.IsNullOrEmpty(span_text)) // Nothing entered
+            {
+                background.Color = Colors.White;
+                _highlight_worker.ClearHighlightColor(highlight);
+            }
+            else if(XLHelper.IsValidRangeAddress(span_text)) // Valid Span range entered
+            {
+                background.Color = Colors.LightGreen; // Invalid Span range entered
 
-            if(XLHelper.IsValidRangeAddress(span_text))
-                return Colors.LightGreen;
+                var sheet = _workbook.Worksheet(SelectedSheetIndex + 1);
+                var range = sheet.Range(span_text); 
 
-            return Colors.LightPink;
+                _highlight_worker.SetOrUpdateHighlightColor(highlight,  // ToDo will break if span is reversed
+                    range.FirstRow().RowNumber(), range.LastRow().RowNumber(), 
+                    range.FirstColumn().ColumnNumber(), range.LastColumn().ColumnNumber());
+            }
+            else
+            {
+                background.Color = Colors.LightPink;
+                _highlight_worker.ClearHighlightColor(highlight);
+            }
         }
 
         #region PropertiesFields
@@ -217,7 +236,7 @@ namespace LugbulkListMaker
             set
             {
                 _element_id_span_text = value;
-                ElementIdSpanBackground.Color = ValidateSpanText(_element_id_span_text);
+                ValidateSpanText(_element_id_span_text, ElementIdSpanBackground, _element_id_span_highlight_color);
                 PropertyHasChanged("ElementIdSpanText");
                 PropertyHasChanged("ElementIdSpanBackground");
             }
@@ -232,7 +251,7 @@ namespace LugbulkListMaker
             set
             {
                 _buyers_names_span_text = value;
-                BuyersNamesSpanBackground.Color = ValidateSpanText(_buyers_names_span_text);
+                ValidateSpanText(_buyers_names_span_text, BuyersNamesSpanBackground, _buyers_names_span_highlight_color);
                 PropertyHasChanged("BuyersNamesSpanText");
                 PropertyHasChanged("BuyersNamesSpanBackground");
             }
@@ -247,7 +266,7 @@ namespace LugbulkListMaker
             set
             {
                 _bl_desc_span_text = value;
-                BlDescSpanBackground.Color = ValidateSpanText(_bl_desc_span_text);
+                ValidateSpanText(_bl_desc_span_text, BlDescSpanBackground, _bl_desc_span_highlight_color);
                 PropertyHasChanged("BlDescSpanText");
                 PropertyHasChanged("BlDescSpanBackground");
             }
@@ -262,7 +281,7 @@ namespace LugbulkListMaker
             set
             {
                 _bl_color_span_text = value;
-                BlColorSpanBackground.Color = ValidateSpanText(_bl_color_span_text);
+                ValidateSpanText(_bl_color_span_text, BlColorSpanBackground, _bl_color_span_highlight_color);
                 PropertyHasChanged("BlColorSpanText");
                 PropertyHasChanged("BlColorSpanBackground");
             }
@@ -277,7 +296,7 @@ namespace LugbulkListMaker
             set
             {
                 _tlg_color_span_text = value;
-                TlgColorSpanBackground.Color = ValidateSpanText(_tlg_color_span_text);
+                ValidateSpanText(_tlg_color_span_text, TlgColorSpanBackground, _tlg_color_span_highlight_color);
                 PropertyHasChanged("TlgColorSpanText");
                 PropertyHasChanged("TlgColorSpanBackground");
             }
@@ -299,7 +318,6 @@ namespace LugbulkListMaker
             }
         }
 
-
         public SolidColorBrush BlDescSpanBackground
         {
             get
@@ -307,7 +325,6 @@ namespace LugbulkListMaker
                 return _bl_desc_span_background;
             }
         }
-
 
         public SolidColorBrush BlColorSpanBackground
         {
@@ -317,12 +334,51 @@ namespace LugbulkListMaker
             }
         }
 
-
         public SolidColorBrush TlgColorSpanBackground
         {
             get
             {
                 return _tlg_color_span_background;
+            }
+        }
+
+        public SolidColorBrush ElementIdSpanHighlightColor
+        {
+            get
+            {
+                return new SolidColorBrush(_element_id_span_highlight_color);
+            }
+        }
+
+        public SolidColorBrush BuyersNamesSpanHighlightColor
+        {
+            get
+            {
+                return new SolidColorBrush(_buyers_names_span_highlight_color);
+            }
+        }
+
+        public SolidColorBrush BlDescSpanHighlightColor
+        {
+            get
+            {
+                return new SolidColorBrush(_bl_desc_span_highlight_color);
+            }
+        }
+
+        public SolidColorBrush BlColorSpanHighlightColor
+        {
+            get
+            {
+                return new SolidColorBrush(_bl_color_span_highlight_color);
+            }
+        }
+
+        public SolidColorBrush TlgColorSpanHighlightColor
+        {
+            get
+            {
+                return new SolidColorBrush(_tlg_color_span_highlight_color);
             }
         }
 

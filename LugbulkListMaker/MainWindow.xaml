@@ -42,18 +42,24 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="30" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" >Element ID span:</TextBlock>
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ElementIdSpanText }" Background="{Binding ElementIdSpanBackground}" IsEnabled="{Binding IsFileLoaded}" />
+            <Rectangle Grid.Row="0" Grid.Column="2" Fill="{Binding ElementIdSpanHighlightColor}" Margin="4" />
             <TextBlock Grid.Row="1" Grid.Column="0" >Buyers Names span:</TextBlock>
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuyersNamesSpanText}" Background="{Binding BuyersNamesSpanBackground}" IsEnabled="{Binding IsFileLoaded}"  />
+            <Rectangle Grid.Row="1" Grid.Column="2" Fill="{Binding BuyersNamesSpanHighlightColor}" Margin="4" />
             <TextBlock Grid.Row="2" Grid.Column="0" >BL Description span:</TextBlock>
             <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BlDescSpanText}" Background="{Binding BlDescSpanBackground}" IsEnabled="{Binding IsFileLoaded}"  />
+            <Rectangle Grid.Row="2" Grid.Column="2" Fill="{Binding BlDescSpanHighlightColor}" Margin="4" />
             <TextBlock Grid.Row="3" Grid.Column="0" >BL Color span:</TextBlock>
             <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding BlColorSpanText}" Background="{Binding BlColorSpanBackground}" IsEnabled="{Binding IsFileLoaded}"  />
+            <Rectangle Grid.Row="3" Grid.Column="2" Fill="{Binding BlColorSpanHighlightColor}" Margin="4" />
             <TextBlock Grid.Row="4" Grid.Column="0" >TLG Color span:</TextBlock>
             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding TlgColorSpanText}" Background="{Binding TlgColorSpanBackground}" IsEnabled="{Binding IsFileLoaded}"  />
+            <Rectangle Grid.Row="4" Grid.Column="2" Fill="{Binding TlgColorSpanHighlightColor}" Margin="4" />
 
         </Grid>
         <DataGrid x:Name="InputDataGrid" Margin="10" ItemsSource="{Binding FileData}"  >
