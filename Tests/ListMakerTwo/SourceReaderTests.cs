@@ -13,93 +13,69 @@ namespace Tests.ListMakerTwo
     [TestFixture]
     public class SourceReaderTests
     {
-        [Test]
-        public void SourceReader_CanGetElements()
+        private static Mock<IXLRange> CreateMockRange(int column_start, int row_start, int column_end, int row_end)
         {
-            var parameters = new InputParameters();
+            var range = new Mock<IXLRange>();
 
-            parameters.ElementRowSpan = "3:5";
-            parameters.ElementIdColumn = "E";
-            parameters.BrickLinkDescriptionColumn = "D";
-            parameters.BrickLinkIdColumn = "I";
-            parameters.BrickLinkColorColumn = "C";
+            var range_column_start = new Mock<IXLRangeColumn>();
+            range_column_start.Setup(x => x.ColumnNumber()).Returns(column_start);
+            range.Setup(x => x.FirstColumn(null)).Returns(range_column_start.Object);
 
-            var sheet = new Mock<IXLWorksheet>();
+            var range_column_end = new Mock<IXLRangeColumn>();
+            range_column_end.Setup(x => x.ColumnNumber()).Returns(column_end);
+            range.Setup(x => x.LastColumn(null)).Returns(range_column_end.Object);
 
-            var cell_E3 = new Mock<IXLCell>(); cell_E3.SetupGet(x => x.Value).Returns("3333");
-            sheet.Setup(x => x.Cell(3, "E")).Returns(cell_E3.Object);
-            var cell_D3 = new Mock<IXLCell>(); cell_D3.SetupGet(x => x.Value).Returns("Brick 3");
-            sheet.Setup(x => x.Cell(3, "D")).Returns(cell_D3.Object);
-            var cell_I3 = new Mock<IXLCell>(); cell_I3.SetupGet(x => x.Value).Returns("3333b");
-            sheet.Setup(x => x.Cell(3, "I")).Returns(cell_I3.Object);
-            var cell_C3 = new Mock<IXLCell>(); cell_C3.SetupGet(x => x.Value).Returns("Red");
-            sheet.Setup(x => x.Cell(3, "C")).Returns(cell_C3.Object);
+            var range_row_start = new Mock<IXLRangeRow>();
+            range_row_start.Setup(x => x.RowNumber()).Returns(row_start);
+            range.Setup(x => x.FirstRow(null)).Returns(range_row_start.Object);
 
-            var cell_E4 = new Mock<IXLCell>(); cell_E4.SetupGet(x => x.Value).Returns("4444");
-            sheet.Setup(x => x.Cell(4, "E")).Returns(cell_E4.Object);
-            var cell_D4 = new Mock<IXLCell>(); cell_D4.SetupGet(x => x.Value).Returns("Brick 4");
-            sheet.Setup(x => x.Cell(4, "D")).Returns(cell_D4.Object);
-            var cell_I4 = new Mock<IXLCell>(); cell_I4.SetupGet(x => x.Value).Returns("4444b");
-            sheet.Setup(x => x.Cell(4, "I")).Returns(cell_I4.Object);
-            var cell_C4 = new Mock<IXLCell>(); cell_C4.SetupGet(x => x.Value).Returns("Blue");
-            sheet.Setup(x => x.Cell(4, "C")).Returns(cell_C4.Object);
+            var range_row_end = new Mock<IXLRangeRow>();
+            range_row_end.Setup(x => x.RowNumber()).Returns(row_end);
+            range.Setup(x => x.LastRow(null)).Returns(range_row_end.Object);
 
-            var cell_E5 = new Mock<IXLCell>(); cell_E5.SetupGet(x => x.Value).Returns("5555");
-            sheet.Setup(x => x.Cell(5, "E")).Returns(cell_E5.Object);
-            var cell_D5 = new Mock<IXLCell>(); cell_D5.SetupGet(x => x.Value).Returns("Brick 5");
-            sheet.Setup(x => x.Cell(5, "D")).Returns(cell_D5.Object);
-            var cell_I5 = new Mock<IXLCell>(); cell_I5.SetupGet(x => x.Value).Returns("5555b");
-            sheet.Setup(x => x.Cell(5, "I")).Returns(cell_I5.Object);
-            var cell_C5 = new Mock<IXLCell>(); cell_C5.SetupGet(x => x.Value).Returns("Green");
-            sheet.Setup(x => x.Cell(5, "C")).Returns(cell_C5.Object);
+            return range;
+        }
 
-            var reader = new SourceReader(sheet.Object, parameters);
-
-            var result = reader.GetElements();
-
-            Assert.That(result.Count, Is.EqualTo(3));
-            Assert.That(result[0].ElementID, Is.EqualTo("3333"));
-            Assert.That(result[0].BricklinkDescription, Is.EqualTo("Brick 3"));
-            Assert.That(result[0].BricklinkId, Is.EqualTo("3333b"));
-            Assert.That(result[0].BricklinkColor, Is.EqualTo("Red"));
-            Assert.That(result[1].ElementID, Is.EqualTo("4444"));
-            Assert.That(result[1].BricklinkDescription, Is.EqualTo("Brick 4"));
-            Assert.That(result[1].BricklinkId, Is.EqualTo("4444b"));
-            Assert.That(result[1].BricklinkColor, Is.EqualTo("Blue"));
-            Assert.That(result[2].ElementID, Is.EqualTo("5555"));
-            Assert.That(result[2].BricklinkDescription, Is.EqualTo("Brick 5"));
-            Assert.That(result[2].BricklinkId, Is.EqualTo("5555b"));
-            Assert.That(result[2].BricklinkColor, Is.EqualTo("Green"));
-
-            // if (amount_cell.Address.ColumnLetter == Buyers_Column_Span_End)
+        private void CreateMockCell(string value, int row, int column, Mock<IXLWorksheet> sheet)
+        {
+            var cell = new Mock<IXLCell>(); cell.Setup(x => x.Value).Returns(value);
+            sheet.Setup(x => x.Cell(row, column)).Returns(cell.Object);
         }
 
         [Test]
-        public void SourceReader_CanGetBuyers()
+        public void SourceReaderGen2_CanGetBuyers()
         {
-            var parameters = new InputParameters();
+            /*
+                _       Henrik      Alice   Simpson
+                111     1           0       1 
+                222     1           1       0
+                222     0           1       0
+            */
 
-            parameters.BuyersColumnSpan = "C:E";
-            parameters.BuyersRow = 2;
+            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+
+            var parameters = new InputParameters();
+            parameters.ElementIdSpan = range_A2A4.Object;
+            parameters.BuyersSpan = range_B1D1.Object;
 
             var sheet = new Mock<IXLWorksheet>();
 
-            var cell_C2 = new Mock<IXLCell>(); cell_C2.SetupGet(x => x.Value).Returns("Henrik");
-            var cell_C2_address = new Mock<IXLAddress>(); cell_C2_address.SetupGet(x => x.ColumnLetter).Returns("C");
-            cell_C2.SetupGet(x => x.Address).Returns(cell_C2_address.Object);
+            CreateMockCell("Henrik", 1, 2, sheet);
+            CreateMockCell("Alice", 1, 3, sheet);
+            CreateMockCell("Simpson", 1, 4, sheet);
 
-            var cell_D2 = new Mock<IXLCell>(); cell_D2.SetupGet(x => x.Value).Returns("Alice");
-            var cell_D2_address = new Mock<IXLAddress>(); cell_D2_address.SetupGet(x => x.ColumnLetter).Returns("D");
-            cell_D2.SetupGet(x => x.Address).Returns(cell_D2_address.Object);
+            CreateMockCell("1", 2, 2, sheet);
+            CreateMockCell("0", 2, 3, sheet);
+            CreateMockCell("1", 2, 4, sheet);
 
-            var cell_E2 = new Mock<IXLCell>(); cell_E2.SetupGet(x => x.Value).Returns("Simpson");
-            var cell_E2_address = new Mock<IXLAddress>(); cell_E2_address.SetupGet(x => x.ColumnLetter).Returns("E");
-            cell_E2.SetupGet(x => x.Address).Returns(cell_E2_address.Object);
-            
-            sheet.Setup(x => x.Cell(2, "C")).Returns(cell_C2.Object);
+            CreateMockCell("1", 3, 2, sheet);
+            CreateMockCell("1", 3, 3, sheet);
+            CreateMockCell("0", 3, 4, sheet);
 
-            cell_C2.Setup(x => x.CellRight()).Returns(cell_D2.Object);
-            cell_D2.Setup(x => x.CellRight()).Returns(cell_E2.Object);
+            CreateMockCell("0", 4, 2, sheet);
+            CreateMockCell("1", 4, 3, sheet);
+            CreateMockCell("0", 4, 4, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
@@ -115,93 +91,246 @@ namespace Tests.ListMakerTwo
         }
 
         [Test]
-        public void SourceReader_CanGetAmounts()
+        public void SourceReaderGen2_CanGetElements()
+        {
+            /*
+            ElementID   BL Desc BL Id   BL Color    TLG Color    Henrik      Alice   Simpson
+            111         Brick1  BB1     Red         Real Read    1           0       1 
+            222         Brick2  BB2     Blue        Bright Blue  1           1       0
+            333         Brick3  BB3     Green       Dark Green   0           1       0
+           */
+
+            var range_A2A4 = CreateMockRange(1,2,1,4);
+            var range_B2B4 = CreateMockRange(2, 2, 2, 4);
+            var range_C2C4 = CreateMockRange(3, 2, 3, 4);
+            var range_D2D4 = CreateMockRange(4, 2, 4, 4);
+            var range_E2E4 = CreateMockRange(5, 2, 5, 4);
+
+            var parameters = new InputParameters();
+
+            parameters.ElementIdSpan = range_A2A4.Object;
+            parameters.BrickLinkDescriptionSpan = range_B2B4.Object;
+            parameters.BrickLinkIdSpan = range_C2C4.Object;
+            parameters.BrickLinkColorSpan = range_D2D4.Object;
+            parameters.TlgColorSpan = range_E2E4.Object;
+
+            var sheet = new Mock<IXLWorksheet>();
+            CreateMockCell("111", 2, 1, sheet);
+            CreateMockCell("222", 3, 1, sheet);
+            CreateMockCell("333", 4, 1, sheet);
+
+            CreateMockCell("Brick1", 2, 2, sheet);
+            CreateMockCell("Brick2", 3, 2, sheet);
+            CreateMockCell("Brick3", 4, 2, sheet);
+
+            CreateMockCell("BB1", 2, 3, sheet);
+            CreateMockCell("BB2", 3, 3, sheet);
+            CreateMockCell("BB3", 4, 3, sheet);
+
+            CreateMockCell("Red", 2, 4, sheet);
+            CreateMockCell("Blue", 3, 4, sheet);
+            CreateMockCell("Green", 4, 4, sheet);
+
+            CreateMockCell("Real Red", 2, 5, sheet);
+            CreateMockCell("Bright Blue", 3, 5, sheet);
+            CreateMockCell("Dark Green", 4, 5, sheet);
+
+            var reader = new SourceReader(sheet.Object, parameters);
+
+            var result = reader.GetElements();
+
+            Assert.That(result.Count, Is.EqualTo(3));
+
+            Assert.That(result[0].ElementID, Is.EqualTo("111"));
+            Assert.That(result[0].BricklinkDescription, Is.EqualTo("Brick1"));
+            Assert.That(result[0].BricklinkId, Is.EqualTo("BB1"));
+            Assert.That(result[0].BricklinkColor, Is.EqualTo("Red"));
+            Assert.That(result[0].MaterialColor, Is.EqualTo("Real Red"));
+
+            Assert.That(result[1].ElementID, Is.EqualTo("222"));
+            Assert.That(result[1].BricklinkDescription, Is.EqualTo("Brick2"));
+            Assert.That(result[1].BricklinkId, Is.EqualTo("BB2"));
+            Assert.That(result[1].BricklinkColor, Is.EqualTo("Blue"));
+            Assert.That(result[1].MaterialColor, Is.EqualTo("Bright Blue"));
+
+            Assert.That(result[2].ElementID, Is.EqualTo("333"));
+            Assert.That(result[2].BricklinkDescription, Is.EqualTo("Brick3"));
+            Assert.That(result[2].BricklinkId, Is.EqualTo("BB3"));
+            Assert.That(result[2].BricklinkColor, Is.EqualTo("Green"));
+            Assert.That(result[2].MaterialColor, Is.EqualTo("Dark Green"));
+        }
+
+        // ToDo Same test but with pivited table
+        [Test]
+        public void SourceReaderGen2_CanGetBuyersWithAReservations()
+        {
+            /*
+                _       Henrik      Alice   Simpson
+                111     1           0       1 
+                222     1           -       0
+                333                         0
+            */
+
+            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+
+            var parameters = new InputParameters();
+            parameters.ElementIdSpan = range_A2A4.Object;
+            parameters.BuyersSpan = range_B1D1.Object;
+            
+            // Reusing columns to simplify test
+            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
+            parameters.BrickLinkIdSpan = range_A2A4.Object;
+            parameters.BrickLinkColorSpan = range_A2A4.Object;
+            parameters.TlgColorSpan = range_A2A4.Object;
+
+            var sheet = new Mock<IXLWorksheet>();
+            
+            CreateMockCell("Henrik", 1, 2, sheet);
+            CreateMockCell("Alice", 1, 3, sheet);
+            CreateMockCell("Simpson", 1, 4, sheet);
+
+            CreateMockCell("111", 2, 1, sheet);
+            CreateMockCell("222", 3, 1, sheet);
+            CreateMockCell("333", 4, 1, sheet);
+
+            CreateMockCell("1", 2, 2, sheet);
+            CreateMockCell("1", 3, 2, sheet);
+            CreateMockCell("", 4, 2, sheet);
+
+            CreateMockCell("0", 2, 3, sheet);
+            CreateMockCell("-", 3, 3, sheet);
+            CreateMockCell("", 4, 3, sheet);
+
+            CreateMockCell("1", 2, 4, sheet);
+            CreateMockCell("0", 3, 4, sheet);
+            CreateMockCell("0", 4, 4, sheet);
+
+            var reader = new SourceReader(sheet.Object, parameters);
+
+            var result = reader.GetBuyers();
+
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result[0].Name, Is.EqualTo("Henrik"));
+            Assert.That(result[1].Name, Is.EqualTo("Simpson"));
+            Assert.That(result[0].Id, Is.EqualTo(100));
+            Assert.That(result[1].Id, Is.EqualTo(101));
+        }
+
+        [Test]
+        public void SourceReaderGen2_CanGetAmounts()
         {
             /*
 
                 A            B            C            D
             1                Henrik       Alice        Simpson
-            2   222222       100          50             
-            3   333333                    100          200
-            4   444444       150                       300
+            2   222222       100          50           75
+            3   333333       25           100          200
+            4   444444       150          25           300
 
             */
+            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
 
             var parameters = new InputParameters();
-            parameters.ElementRowSpan = "2:4";
-            parameters.ElementIdColumn = "A";
-            parameters.BuyersRow = 1;
-            parameters.BuyersColumnSpan = "B:D";
+            parameters.ElementIdSpan = range_A2A4.Object;
+            parameters.BuyersSpan = range_B1D1.Object;
 
             // Reusing columns to simplify test
-            parameters.BrickLinkDescriptionColumn = "A";
-            parameters.BrickLinkIdColumn = "A";
-            parameters.BrickLinkColorColumn = "A";
-            parameters.TlgColorColumn = "A";
-
-            var cell_A1 = new Mock<IXLCell>(); cell_A1.SetupGet(x => x.Value).Returns("");
-            var cell_A2 = new Mock<IXLCell>(); cell_A2.SetupGet(x => x.Value).Returns("222222");
-            var cell_A3 = new Mock<IXLCell>(); cell_A3.SetupGet(x => x.Value).Returns("333333");
-            var cell_A4 = new Mock<IXLCell>(); cell_A4.SetupGet(x => x.Value).Returns("444444");
-
-            var cell_B1 = new Mock<IXLCell>(); cell_B1.SetupGet(x => x.Value).Returns("Henrik");
-            var cell_B2 = new Mock<IXLCell>(); cell_B2.SetupGet(x => x.Value).Returns("100");
-            var cell_B3 = new Mock<IXLCell>(); cell_B3.SetupGet(x => x.Value).Returns("");
-            var cell_B4 = new Mock<IXLCell>(); cell_B4.SetupGet(x => x.Value).Returns("150");
-
-            var cell_C1 = new Mock<IXLCell>(); cell_C1.SetupGet(x => x.Value).Returns("Alice");
-            var cell_C2 = new Mock<IXLCell>(); cell_C2.SetupGet(x => x.Value).Returns("50");
-            var cell_C3 = new Mock<IXLCell>(); cell_C3.SetupGet(x => x.Value).Returns("100");
-            var cell_C4 = new Mock<IXLCell>(); cell_C4.SetupGet(x => x.Value).Returns("");
-
-            var cell_D1 = new Mock<IXLCell>(); cell_D1.SetupGet(x => x.Value).Returns("Simpson");
-            var cell_D2 = new Mock<IXLCell>(); cell_D2.SetupGet(x => x.Value).Returns("");
-            var cell_D3 = new Mock<IXLCell>(); cell_D3.SetupGet(x => x.Value).Returns("200");
-            var cell_D4 = new Mock<IXLCell>(); cell_D4.SetupGet(x => x.Value).Returns("300");
-
-            cell_B1.Setup(x => x.CellRight()).Returns(cell_C1.Object);
-            cell_C1.Setup(x => x.CellRight()).Returns(cell_D1.Object);
-            cell_B2.Setup(x => x.CellRight()).Returns(cell_C2.Object);
-            cell_C2.Setup(x => x.CellRight()).Returns(cell_D2.Object);
-            cell_B3.Setup(x => x.CellRight()).Returns(cell_C3.Object);
-            cell_C3.Setup(x => x.CellRight()).Returns(cell_D3.Object);
-            cell_B4.Setup(x => x.CellRight()).Returns(cell_C4.Object);
-            cell_C4.Setup(x => x.CellRight()).Returns(cell_D4.Object);
-
-            var B_address = new Mock<IXLAddress>(); B_address.SetupGet(x => x.ColumnLetter).Returns("B");
-            cell_B1.SetupGet(x => x.Address).Returns(B_address.Object);
-            cell_B2.SetupGet(x => x.Address).Returns(B_address.Object);
-            cell_B3.SetupGet(x => x.Address).Returns(B_address.Object);
-            cell_B4.SetupGet(x => x.Address).Returns(B_address.Object);
-
-            var C_address = new Mock<IXLAddress>(); C_address.SetupGet(x => x.ColumnLetter).Returns("C");
-            cell_C1.SetupGet(x => x.Address).Returns(C_address.Object);
-            cell_C2.SetupGet(x => x.Address).Returns(C_address.Object);
-            cell_C3.SetupGet(x => x.Address).Returns(C_address.Object);
-            cell_C4.SetupGet(x => x.Address).Returns(C_address.Object);
-
-            var D_address = new Mock<IXLAddress>(); D_address.SetupGet(x => x.ColumnLetter).Returns("D");
-            cell_D1.SetupGet(x => x.Address).Returns(D_address.Object);
-            cell_D2.SetupGet(x => x.Address).Returns(D_address.Object);
-            cell_D3.SetupGet(x => x.Address).Returns(D_address.Object);
-            cell_D4.SetupGet(x => x.Address).Returns(D_address.Object);
+            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
+            parameters.BrickLinkIdSpan = range_A2A4.Object;
+            parameters.BrickLinkColorSpan = range_A2A4.Object;
+            parameters.TlgColorSpan = range_A2A4.Object;
 
             var sheet = new Mock<IXLWorksheet>();
 
-            sheet.Setup(x => x.Cell(2, parameters.ElementIdColumn)).Returns(cell_A2.Object);
-            sheet.Setup(x => x.Cell(3, parameters.ElementIdColumn)).Returns(cell_A3.Object);
-            sheet.Setup(x => x.Cell(4, parameters.ElementIdColumn)).Returns(cell_A4.Object);
+            CreateMockCell("Henrik", 1, 2, sheet);
+            CreateMockCell("Alice", 1, 3, sheet);
+            CreateMockCell("Simpson", 1, 4, sheet);
 
-            sheet.Setup(x => x.Cell(2, "B")).Returns(cell_B2.Object);
-            sheet.Setup(x => x.Cell(3, "B")).Returns(cell_B3.Object);
-            sheet.Setup(x => x.Cell(4, "B")).Returns(cell_B4.Object);
+            CreateMockCell("222222", 2, 1, sheet);
+            CreateMockCell("333333", 3, 1, sheet);
+            CreateMockCell("444444", 4, 1, sheet);
 
-            sheet.Setup(x => x.Cell(parameters.BuyersRow, "B")).Returns(cell_B1.Object);
+            CreateMockCell("100", 2, 2, sheet);
+            CreateMockCell("25", 3, 2, sheet);
+            CreateMockCell("150", 4, 2, sheet);
 
+            CreateMockCell("50", 2, 3, sheet);
+            CreateMockCell("100", 3, 3, sheet);
+            CreateMockCell("25", 4, 3, sheet);
+
+            CreateMockCell("75", 2, 4, sheet);
+            CreateMockCell("200", 3, 4, sheet);
+            CreateMockCell("300", 4, 4, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
             var result = reader.GetReservations();
+
+            Assert.That(result.Count, Is.EqualTo(9));
+            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Henrik" && x.Amount == 100));
+            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Henrik" && x.Amount == 25));
+            Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Henrik" && x.Amount == 150));
+            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Alice" && x.Amount == 50));
+            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Alice" && x.Amount == 100));
+            Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Alice" && x.Amount == 25));
+            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Simpson" && x.Amount == 75));
+            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Simpson" && x.Amount == 200));
+            Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Simpson" && x.Amount == 300));
+        }
+
+        [Test]
+        public void SourceReaderGen2_WillIgnoreZeroAndNonNumbers()
+        {
+            /*
+
+                A            B            C            D
+            1                Henrik       Alice        Simpson
+            2   222222       100          50           
+            3   333333       0            100          200
+            4   444444       150          -            300
+
+            */
+            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+
+            var parameters = new InputParameters();
+            parameters.ElementIdSpan = range_A2A4.Object;
+            parameters.BuyersSpan = range_B1D1.Object;
+
+            // Reusing columns to simplify test
+            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
+            parameters.BrickLinkIdSpan = range_A2A4.Object;
+            parameters.BrickLinkColorSpan = range_A2A4.Object;
+            parameters.TlgColorSpan = range_A2A4.Object;
+
+            var sheet = new Mock<IXLWorksheet>();
+
+            CreateMockCell("Henrik", 1, 2, sheet);
+            CreateMockCell("Alice", 1, 3, sheet);
+            CreateMockCell("Simpson", 1, 4, sheet);
+
+            CreateMockCell("222222", 2, 1, sheet);
+            CreateMockCell("333333", 3, 1, sheet);
+            CreateMockCell("444444", 4, 1, sheet);
+
+            CreateMockCell("100", 2, 2, sheet);
+            CreateMockCell("0", 3, 2, sheet);
+            CreateMockCell("150", 4, 2, sheet);
+
+            CreateMockCell("50", 2, 3, sheet);
+            CreateMockCell("100", 3, 3, sheet);
+            CreateMockCell("-", 4, 3, sheet);
+
+            CreateMockCell("", 2, 4, sheet);
+            CreateMockCell("200", 3, 4, sheet);
+            CreateMockCell("300", 4, 4, sheet);
+
+            var reader = new SourceReader(sheet.Object, parameters);
+
+            var result = reader.GetReservations();
+
             Assert.That(result.Count, Is.EqualTo(6));
             Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Henrik" && x.Amount == 100));
             Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Henrik" && x.Amount == 150));
@@ -209,75 +338,6 @@ namespace Tests.ListMakerTwo
             Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Alice" && x.Amount == 100));
             Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Simpson" && x.Amount == 200));
             Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Simpson" && x.Amount == 300));
-        }
-
-        [Test]
-        public void SourceReader_WillIgnoreZeroAndNonNumbers()
-        {
-            /*
-
-                A            B            C            
-            1                Henrik       Alice        
-            2   222222       100          -
-            3   333333       0            100          
-
-            */
-
-            var parameters = new InputParameters();
-            parameters.ElementRowSpan = "2:3";
-            parameters.ElementIdColumn = "A";
-            parameters.BuyersRow = 1;
-            parameters.BuyersColumnSpan = "B:C";
-
-            // Reusing columns to simplify test
-            parameters.BrickLinkDescriptionColumn = "A";
-            parameters.BrickLinkIdColumn = "A";
-            parameters.BrickLinkColorColumn = "A";
-            parameters.TlgColorColumn = "A";
-
-            var cell_A1 = new Mock<IXLCell>(); cell_A1.SetupGet(x => x.Value).Returns("");
-            var cell_A2 = new Mock<IXLCell>(); cell_A2.SetupGet(x => x.Value).Returns("222222");
-            var cell_A3 = new Mock<IXLCell>(); cell_A3.SetupGet(x => x.Value).Returns("333333");
-
-            var cell_B1 = new Mock<IXLCell>(); cell_B1.SetupGet(x => x.Value).Returns("Henrik");
-            var cell_B2 = new Mock<IXLCell>(); cell_B2.SetupGet(x => x.Value).Returns("100");
-            var cell_B3 = new Mock<IXLCell>(); cell_B3.SetupGet(x => x.Value).Returns("0");
-
-            var cell_C1 = new Mock<IXLCell>(); cell_C1.SetupGet(x => x.Value).Returns("Alice");
-            var cell_C2 = new Mock<IXLCell>(); cell_C2.SetupGet(x => x.Value).Returns("-");
-            var cell_C3 = new Mock<IXLCell>(); cell_C3.SetupGet(x => x.Value).Returns("100");
-
-            cell_B1.Setup(x => x.CellRight()).Returns(cell_C1.Object);
-            cell_B2.Setup(x => x.CellRight()).Returns(cell_C2.Object);
-            cell_B3.Setup(x => x.CellRight()).Returns(cell_C3.Object);
-
-            var B_address = new Mock<IXLAddress>(); B_address.SetupGet(x => x.ColumnLetter).Returns("B");
-            cell_B1.SetupGet(x => x.Address).Returns(B_address.Object);
-            cell_B2.SetupGet(x => x.Address).Returns(B_address.Object);
-            cell_B3.SetupGet(x => x.Address).Returns(B_address.Object);
-
-            var C_address = new Mock<IXLAddress>(); C_address.SetupGet(x => x.ColumnLetter).Returns("C");
-            cell_C1.SetupGet(x => x.Address).Returns(C_address.Object);
-            cell_C2.SetupGet(x => x.Address).Returns(C_address.Object);
-            cell_C3.SetupGet(x => x.Address).Returns(C_address.Object);
-
-            var sheet = new Mock<IXLWorksheet>();
-
-            sheet.Setup(x => x.Cell(2, parameters.ElementIdColumn)).Returns(cell_A2.Object);
-            sheet.Setup(x => x.Cell(3, parameters.ElementIdColumn)).Returns(cell_A3.Object);
-
-            sheet.Setup(x => x.Cell(2, "B")).Returns(cell_B2.Object);
-            sheet.Setup(x => x.Cell(3, "B")).Returns(cell_B3.Object);
-
-            sheet.Setup(x => x.Cell(parameters.BuyersRow, "B")).Returns(cell_B1.Object);
-
-
-            var reader = new SourceReader(sheet.Object, parameters);
-
-            var result = reader.GetReservations();
-            Assert.That(result.Count, Is.EqualTo(2));
-            Assert.True(result.Any(x => x.Element.ElementID == "222222" && x.Buyer.Name == "Henrik" && x.Amount == 100));
-            Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Alice" && x.Amount == 100));
         }
     }
 }

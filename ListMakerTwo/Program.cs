@@ -12,18 +12,18 @@ namespace ListMakerTwo
     {
         static void Main(string[] args)
         {
+            var _fake_sheet = new XLWorkbook().AddWorksheet("Fake"); ;
+
             var parameters = new InputParameters()
             {
                 SourceFileName = "LUGBULK 2017 beställning färdig.xlsx",
                 WorksheetName = "Beställning sammanställd",
-                ElementRowSpan = "2:86",
-                BuyersRow = 87,
-                BuyersColumnSpan = "K:FW",
-                ElementIdColumn = "D",
-                BrickLinkDescriptionColumn = "B",
-                BrickLinkIdColumn = "C",
-                BrickLinkColorColumn = "E",
-                TlgColorColumn = "G" // ToDo
+                ElementIdSpan = _fake_sheet.Range("D2:D86"),
+                BuyersSpan = _fake_sheet.Range("K87:FW87"),
+                BrickLinkDescriptionSpan = _fake_sheet.Range("B2:B86"),
+                BrickLinkIdSpan = _fake_sheet.Range("C2:C86"),
+                BrickLinkColorSpan = _fake_sheet.Range("E2:C86"),
+                TlgColorSpan = _fake_sheet.Range("G2:G86"),
             };
 
             var sheet = SheetRetriever.Get(parameters.SourceFileName,

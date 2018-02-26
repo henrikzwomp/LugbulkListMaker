@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace ListMakerTwo
         IList<LugBulkBuyer> GetBuyers();
         IList<LugBulkReservation> GetReservations();
     }
-
+    
     public class SourceReader : ISourceReader
     {
         private IXLWorksheet _work_sheet;
@@ -36,58 +37,43 @@ namespace ListMakerTwo
 
             _reservations = new List<LugBulkReservation>();
 
-            var buyers_list = GetBuyers();
-            var elements_list = GetElements();
+            GetBuyers();
+            GetElements();
 
-            var Element_Row_Span_Start = 0;
-            var Element_Row_Span_End = 0;
-            SettingsHelper.ReadSpan(_parameters.ElementRowSpan,
-                out Element_Row_Span_Start, out Element_Row_Span_End);
+            var reservation_pos_list = SourceReaderHelper.GetBottomRightCrossRangePositions
+                (_parameters.BuyersSpan, _parameters.ElementIdSpan);
 
-            var Buyers_Column_Span_Start = "";
-            var Buyers_Column_Span_End = "";
-            SettingsHelper.ReadSpan(_parameters.BuyersColumnSpan,
-                out Buyers_Column_Span_Start, out Buyers_Column_Span_End);
-
-            for (int current_element_Row = Element_Row_Span_Start; 
-                current_element_Row <= Element_Row_Span_End; 
-                current_element_Row++)
+            foreach(var reservation_pos in reservation_pos_list)
             {
-                var element_cell = _work_sheet.Cell(current_element_Row, _parameters.ElementIdColumn);
-                var amount_cell = _work_sheet.Cell(current_element_Row, Buyers_Column_Span_Start);
-                var buyer_cell = _work_sheet.Cell(_parameters.BuyersRow, Buyers_Column_Span_Start);
+                var reservation_amount = 0;
+                
+                // Skip if not a number
+                if (!int.TryParse(_work_sheet.Cell(reservation_pos.Row, reservation_pos.Column)
+                    .Value.ToString(), out reservation_amount))
+                    continue;
 
-                while (true)
+                // Skip 0
+                if (reservation_amount == 0)
+                    continue;
+
+                var element_id_pos = SourceReaderHelper.GetTitlePositionForValuePosition
+                    (reservation_pos, _parameters.ElementIdSpan);
+                var buyer_name_pos = SourceReaderHelper.GetTitlePositionForValuePosition
+                    (reservation_pos, _parameters.BuyersSpan);
+
+                var element_id = _work_sheet.Cell(element_id_pos.Row, element_id_pos.Column)
+                    .Value.ToString().Trim();
+                var buyer_name = _work_sheet.Cell(buyer_name_pos.Row, buyer_name_pos.Column)
+                    .Value.ToString().Trim();
+
+                var reservation = new LugBulkReservation()
                 {
-                    var amount_raw = amount_cell.Value.ToString().Trim();
-                    int amount = 0;
+                    Element = _elements.Where(x => x.ElementID == element_id).First(),
+                    Buyer = _buyers.Where(x => x.Name == buyer_name).First(),
+                    Amount = reservation_amount,
+                };
 
-                    if (amount_raw != "" && int.TryParse(amount_raw, out amount))
-                    {
-                        if(amount > 0)
-                        {
-                            var elementid = _work_sheet.Cell(current_element_Row,
-                                _parameters.ElementIdColumn).Value.ToString().Trim();
-                            var buyer = buyer_cell.Value.ToString().Trim();
-
-                            var reservation = new LugBulkReservation()
-                            {
-                                Element = elements_list.Where(x => x.ElementID == elementid).First(),
-                                Buyer = buyers_list.Where(x => x.Name == buyer).First(),
-                                Amount = amount
-                            };
-
-                            _reservations.Add(reservation);
-                        }
-                    }
-
-                    if (amount_cell.Address.ColumnLetter == Buyers_Column_Span_End)
-                        break;
-
-                    amount_cell = amount_cell.CellRight();
-                    buyer_cell = buyer_cell.CellRight();
-                }
-
+                _reservations.Add(reservation);
             }
 
             return _reservations;
@@ -100,51 +86,56 @@ namespace ListMakerTwo
 
             _buyers = new List<LugBulkBuyer>();
 
-            var buyers_column_span_start = "";
-            var buyers_column_span_end = "";
-            SettingsHelper.ReadSpan(_parameters.BuyersColumnSpan,
-                out buyers_column_span_start, out buyers_column_span_end);
-
-            var element_row_span_start = 0;
-            var element_row_span_end = 0;
-            SettingsHelper.ReadSpan(_parameters.ElementRowSpan,
-                out element_row_span_start, out element_row_span_end);
-
-            var current_col =  buyers_column_span_start;
-
-            var buyer_cell = _work_sheet.Cell(_parameters.BuyersRow, buyers_column_span_start);
-
             var buyer_id = 100;
 
-            while (true)
+            var first_column = _parameters.BuyersSpan.FirstColumn().ColumnNumber();
+            var last_column = _parameters.BuyersSpan.LastColumn().ColumnNumber();
+            var first_row = _parameters.BuyersSpan.FirstRow().RowNumber();
+            var last_row = _parameters.BuyersSpan.LastRow().RowNumber();
+
+            CellPosition reservations_start_pos = null;
+            CellPosition reservations_end_pos = null;
+
+            SourceReaderHelper.GetBottomRightCrossRangeStartEndPositions(
+                _parameters.BuyersSpan, _parameters.ElementIdSpan, 
+                out reservations_start_pos, out reservations_end_pos);
+
+            for (int current_row = first_row; current_row <= last_row; current_row++)
             {
-                // Check for reservations
-                // ToDo will break tests
-                // ToDo Test
-                var found_reservations = false;
-                for(int i = element_row_span_start; i <= element_row_span_end; i++)
+                for (int current_column = first_column; current_column <= last_column; current_column++)
                 {
-                    var reservation_value = _work_sheet.Cell(i, buyer_cell.Address.ColumnNumber)
-                        .Value.ToString().Trim();
+                    // Find a element amount
 
-                    if (reservation_value != "" && reservation_value != "0")
+                    var reservation_values = SourceReaderHelper.GetValuesForTitlePosition(
+                        new CellPosition() { Row = current_row, Column = current_column },
+                        reservations_start_pos, reservations_end_pos, _work_sheet);
+
+                    bool reserveration_found = false;
+                    foreach(var value in reservation_values)
                     {
-                        found_reservations = true;
-                        break;
+                        if (value == "")
+                            continue;
+
+                        int out_value = 0;
+                        if(int.TryParse(value, out out_value))
+                        {
+                            if(out_value > 0)
+                            {
+                                reserveration_found = true;
+                                break;
+                            }
+                        }
                     }
+
+                    string buyer = _work_sheet.Cell(current_row, current_column).Value.ToString().Trim();
+
+                    if (reserveration_found)
+                    {
+                        _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = buyer_id });
+                        buyer_id++;
+                    }
+
                 }
-
-                if (found_reservations)
-                {
-                    var buyer = buyer_cell.Value.ToString().Trim();
-                    _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = buyer_id });
-                    buyer_id++;
-                }
-
-                if (buyer_cell.Address.ColumnLetter == buyers_column_span_end)
-                    break;
-
-                buyer_cell = buyer_cell.CellRight();
             }
 
             return _buyers;
@@ -157,30 +148,54 @@ namespace ListMakerTwo
 
             _elements = new List<LugBulkElement>();
 
-            var Element_Row_Span_Start = 0;
-            var Element_Row_Span_End = 0;
-            SettingsHelper.ReadSpan(_parameters.ElementRowSpan,
-                out Element_Row_Span_Start, out Element_Row_Span_End);
+            var element_id_values = ReadRangeValues(_parameters.ElementIdSpan);
+            var bl_desc_values = ReadRangeValues(_parameters.BrickLinkDescriptionSpan);
+            var bl_color_values = ReadRangeValues(_parameters.BrickLinkColorSpan);
+            var bl_id_values = ReadRangeValues(_parameters.BrickLinkIdSpan);
+            var tlg_color_values = ReadRangeValues(_parameters.TlgColorSpan);
 
-            for (int i = Element_Row_Span_Start; i <= Element_Row_Span_End; i++)
+            for(int i = 0; i < element_id_values.Count; i++)
             {
-                var elementid = _work_sheet.Cell(i, _parameters.ElementIdColumn).Value.ToString().Trim();
-                var description = _work_sheet.Cell(i, _parameters.BrickLinkDescriptionColumn).Value.ToString().Trim();
-                var blid = _work_sheet.Cell(i, _parameters.BrickLinkIdColumn).Value.ToString().Trim();
-                var blcolor = _work_sheet.Cell(i, _parameters.BrickLinkColorColumn).Value.ToString().Trim();
-                var material_color = _work_sheet.Cell(i, _parameters.TlgColorColumn).Value.ToString().Trim();
-
                 _elements.Add(new LugBulkElement()
                 {
-                    ElementID = elementid,
-                    BricklinkDescription = description,
-                    BricklinkId = blid,
-                    BricklinkColor = blcolor,
-                    MaterialColor = material_color
+                    ElementID = element_id_values[i],
+                    BricklinkDescription = bl_desc_values[i],
+                    BricklinkId = bl_id_values[i],
+                    BricklinkColor = bl_color_values[i],
+                    MaterialColor = tlg_color_values[i]
                 });
             }
 
             return _elements;
         }
+
+        private IList<string> ReadRangeValues(IXLRange range)
+        {
+            var result = new List<string>();
+
+            var first_column = range.FirstColumn().ColumnNumber();
+            var last_column = range.LastColumn().ColumnNumber();
+            var first_row = range.FirstRow().RowNumber();
+            var last_row = range.LastRow().RowNumber();
+
+            for (int current_row = first_row; current_row <= last_row; current_row++)
+            {
+                for (int current_column = first_column; current_column <= last_column; current_column++)
+                {
+                    result.Add(_work_sheet.Cell(current_row, current_column).Value.ToString().Trim());
+                }
+            }
+
+            return result;
+        }
+        
     }
+
+    public class CellPosition
+    {
+        public int Row;
+        public int Column;
+    }
+    
 }
+

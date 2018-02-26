@@ -64,6 +64,7 @@
     <Compile Include="SettingsHelper.cs" />
     <Compile Include="SheetRetriever.cs" />
     <Compile Include="SourceReader.cs" />
+    <Compile Include="SourceReaderHelper.cs" />
     <Compile Include="SqlFileCreator.cs" />
   </ItemGroup>
   <ItemGroup>
