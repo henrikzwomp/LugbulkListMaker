@@ -55,14 +55,17 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExcelMocker.cs" />
     <Compile Include="ListMakerTwo\LugBulkPicklistCreatorTests.cs" />
     <Compile Include="ListMakerTwo\PicklistXlsxFileCreatorTests.cs" />
     <Compile Include="ListMakerTwo\SettingsHelperTests.cs" />
     <Compile Include="ListMakerTwo\SourceReaderHelperTests.cs" />
     <Compile Include="ListMakerTwo\SourceReaderTests.cs" />
+    <Compile Include="ListMakerTwo\SourceReader_RealExample2017.cs" />
     <Compile Include="ListMakerTwo\SqlFileCreatorTests.cs" />
     <Compile Include="LugbulkListMaker\MainWindowLogicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ClosedXML\ClosedXML\ClosedXML.csproj">
@@ -79,6 +82,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ListMakerTwo\LUGBULK 2017 beställning färdig.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

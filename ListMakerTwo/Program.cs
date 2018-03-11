@@ -12,7 +12,7 @@ namespace ListMakerTwo
     {
         static void Main(string[] args)
         {
-            var _fake_sheet = new XLWorkbook().AddWorksheet("Fake"); ;
+            var _fake_sheet = new XLWorkbook().AddWorksheet("Fake");
 
             var parameters = new InputParameters()
             {
@@ -22,7 +22,7 @@ namespace ListMakerTwo
                 BuyersSpan = _fake_sheet.Range("K87:FW87"),
                 BrickLinkDescriptionSpan = _fake_sheet.Range("B2:B86"),
                 BrickLinkIdSpan = _fake_sheet.Range("C2:C86"),
-                BrickLinkColorSpan = _fake_sheet.Range("E2:C86"),
+                BrickLinkColorSpan = _fake_sheet.Range("E2:E86"),
                 TlgColorSpan = _fake_sheet.Range("G2:G86"),
             };
 

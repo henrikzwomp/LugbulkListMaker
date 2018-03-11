@@ -40,7 +40,7 @@ namespace ListMakerTwo
             GetBuyers();
             GetElements();
 
-            var reservation_pos_list = SourceReaderHelper.GetBottomRightCrossRangePositions
+            var reservation_pos_list = SourceReaderHelper.GetCrossRangePositions
                 (_parameters.BuyersSpan, _parameters.ElementIdSpan);
 
             foreach(var reservation_pos in reservation_pos_list)
@@ -96,7 +96,7 @@ namespace ListMakerTwo
             CellPosition reservations_start_pos = null;
             CellPosition reservations_end_pos = null;
 
-            SourceReaderHelper.GetBottomRightCrossRangeStartEndPositions(
+            SourceReaderHelper.GetCrossRangeStartEndPositions(
                 _parameters.BuyersSpan, _parameters.ElementIdSpan, 
                 out reservations_start_pos, out reservations_end_pos);
 

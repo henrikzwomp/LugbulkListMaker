@@ -13,37 +13,8 @@ namespace Tests.ListMakerTwo
     [TestFixture]
     public class SourceReaderTests
     {
-        private static Mock<IXLRange> CreateMockRange(int column_start, int row_start, int column_end, int row_end)
-        {
-            var range = new Mock<IXLRange>();
-
-            var range_column_start = new Mock<IXLRangeColumn>();
-            range_column_start.Setup(x => x.ColumnNumber()).Returns(column_start);
-            range.Setup(x => x.FirstColumn(null)).Returns(range_column_start.Object);
-
-            var range_column_end = new Mock<IXLRangeColumn>();
-            range_column_end.Setup(x => x.ColumnNumber()).Returns(column_end);
-            range.Setup(x => x.LastColumn(null)).Returns(range_column_end.Object);
-
-            var range_row_start = new Mock<IXLRangeRow>();
-            range_row_start.Setup(x => x.RowNumber()).Returns(row_start);
-            range.Setup(x => x.FirstRow(null)).Returns(range_row_start.Object);
-
-            var range_row_end = new Mock<IXLRangeRow>();
-            range_row_end.Setup(x => x.RowNumber()).Returns(row_end);
-            range.Setup(x => x.LastRow(null)).Returns(range_row_end.Object);
-
-            return range;
-        }
-
-        private void CreateMockCell(string value, int row, int column, Mock<IXLWorksheet> sheet)
-        {
-            var cell = new Mock<IXLCell>(); cell.Setup(x => x.Value).Returns(value);
-            sheet.Setup(x => x.Cell(row, column)).Returns(cell.Object);
-        }
-
         [Test]
-        public void SourceReaderGen2_CanGetBuyers()
+        public void SourceReader_CanGetBuyers()
         {
             /*
                 _       Henrik      Alice   Simpson
@@ -52,8 +23,8 @@ namespace Tests.ListMakerTwo
                 222     0           1       0
             */
 
-            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
 
             var parameters = new InputParameters();
             parameters.ElementIdSpan = range_A2A4.Object;
@@ -61,21 +32,21 @@ namespace Tests.ListMakerTwo
 
             var sheet = new Mock<IXLWorksheet>();
 
-            CreateMockCell("Henrik", 1, 2, sheet);
-            CreateMockCell("Alice", 1, 3, sheet);
-            CreateMockCell("Simpson", 1, 4, sheet);
+            ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
+            ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
+            ExcelMocker.CreateMockCell("Simpson", 1, 4, sheet);
 
-            CreateMockCell("1", 2, 2, sheet);
-            CreateMockCell("0", 2, 3, sheet);
-            CreateMockCell("1", 2, 4, sheet);
+            ExcelMocker.CreateMockCell("1", 2, 2, sheet);
+            ExcelMocker.CreateMockCell("0", 2, 3, sheet);
+            ExcelMocker.CreateMockCell("1", 2, 4, sheet);
 
-            CreateMockCell("1", 3, 2, sheet);
-            CreateMockCell("1", 3, 3, sheet);
-            CreateMockCell("0", 3, 4, sheet);
+            ExcelMocker.CreateMockCell("1", 3, 2, sheet);
+            ExcelMocker.CreateMockCell("1", 3, 3, sheet);
+            ExcelMocker.CreateMockCell("0", 3, 4, sheet);
 
-            CreateMockCell("0", 4, 2, sheet);
-            CreateMockCell("1", 4, 3, sheet);
-            CreateMockCell("0", 4, 4, sheet);
+            ExcelMocker.CreateMockCell("0", 4, 2, sheet);
+            ExcelMocker.CreateMockCell("1", 4, 3, sheet);
+            ExcelMocker.CreateMockCell("0", 4, 4, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
@@ -91,7 +62,7 @@ namespace Tests.ListMakerTwo
         }
 
         [Test]
-        public void SourceReaderGen2_CanGetElements()
+        public void SourceReader_CanGetElements()
         {
             /*
             ElementID   BL Desc BL Id   BL Color    TLG Color    Henrik      Alice   Simpson
@@ -100,11 +71,11 @@ namespace Tests.ListMakerTwo
             333         Brick3  BB3     Green       Dark Green   0           1       0
            */
 
-            var range_A2A4 = CreateMockRange(1,2,1,4);
-            var range_B2B4 = CreateMockRange(2, 2, 2, 4);
-            var range_C2C4 = CreateMockRange(3, 2, 3, 4);
-            var range_D2D4 = CreateMockRange(4, 2, 4, 4);
-            var range_E2E4 = CreateMockRange(5, 2, 5, 4);
+            var range_A2A4 = ExcelMocker.CreateMockRange(1,2,1,4);
+            var range_B2B4 = ExcelMocker.CreateMockRange(2, 2, 2, 4);
+            var range_C2C4 = ExcelMocker.CreateMockRange(3, 2, 3, 4);
+            var range_D2D4 = ExcelMocker.CreateMockRange(4, 2, 4, 4);
+            var range_E2E4 = ExcelMocker.CreateMockRange(5, 2, 5, 4);
 
             var parameters = new InputParameters();
 
@@ -115,25 +86,25 @@ namespace Tests.ListMakerTwo
             parameters.TlgColorSpan = range_E2E4.Object;
 
             var sheet = new Mock<IXLWorksheet>();
-            CreateMockCell("111", 2, 1, sheet);
-            CreateMockCell("222", 3, 1, sheet);
-            CreateMockCell("333", 4, 1, sheet);
+            ExcelMocker.CreateMockCell("111", 2, 1, sheet);
+            ExcelMocker.CreateMockCell("222", 3, 1, sheet);
+            ExcelMocker.CreateMockCell("333", 4, 1, sheet);
 
-            CreateMockCell("Brick1", 2, 2, sheet);
-            CreateMockCell("Brick2", 3, 2, sheet);
-            CreateMockCell("Brick3", 4, 2, sheet);
+            ExcelMocker.CreateMockCell("Brick1", 2, 2, sheet);
+            ExcelMocker.CreateMockCell("Brick2", 3, 2, sheet);
+            ExcelMocker.CreateMockCell("Brick3", 4, 2, sheet);
 
-            CreateMockCell("BB1", 2, 3, sheet);
-            CreateMockCell("BB2", 3, 3, sheet);
-            CreateMockCell("BB3", 4, 3, sheet);
+            ExcelMocker.CreateMockCell("BB1", 2, 3, sheet);
+            ExcelMocker.CreateMockCell("BB2", 3, 3, sheet);
+            ExcelMocker.CreateMockCell("BB3", 4, 3, sheet);
 
-            CreateMockCell("Red", 2, 4, sheet);
-            CreateMockCell("Blue", 3, 4, sheet);
-            CreateMockCell("Green", 4, 4, sheet);
+            ExcelMocker.CreateMockCell("Red", 2, 4, sheet);
+            ExcelMocker.CreateMockCell("Blue", 3, 4, sheet);
+            ExcelMocker.CreateMockCell("Green", 4, 4, sheet);
 
-            CreateMockCell("Real Red", 2, 5, sheet);
-            CreateMockCell("Bright Blue", 3, 5, sheet);
-            CreateMockCell("Dark Green", 4, 5, sheet);
+            ExcelMocker.CreateMockCell("Real Red", 2, 5, sheet);
+            ExcelMocker.CreateMockCell("Bright Blue", 3, 5, sheet);
+            ExcelMocker.CreateMockCell("Dark Green", 4, 5, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
@@ -162,7 +133,7 @@ namespace Tests.ListMakerTwo
 
         // ToDo Same test but with pivited table
         [Test]
-        public void SourceReaderGen2_CanGetBuyersWithAReservations()
+        public void SourceReader_CanGetBuyersWithAReservations()
         {
             /*
                 _       Henrik      Alice   Simpson
@@ -171,8 +142,8 @@ namespace Tests.ListMakerTwo
                 333                         0
             */
 
-            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
 
             var parameters = new InputParameters();
             parameters.ElementIdSpan = range_A2A4.Object;
@@ -185,26 +156,26 @@ namespace Tests.ListMakerTwo
             parameters.TlgColorSpan = range_A2A4.Object;
 
             var sheet = new Mock<IXLWorksheet>();
-            
-            CreateMockCell("Henrik", 1, 2, sheet);
-            CreateMockCell("Alice", 1, 3, sheet);
-            CreateMockCell("Simpson", 1, 4, sheet);
 
-            CreateMockCell("111", 2, 1, sheet);
-            CreateMockCell("222", 3, 1, sheet);
-            CreateMockCell("333", 4, 1, sheet);
+            ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
+            ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
+            ExcelMocker.CreateMockCell("Simpson", 1, 4, sheet);
 
-            CreateMockCell("1", 2, 2, sheet);
-            CreateMockCell("1", 3, 2, sheet);
-            CreateMockCell("", 4, 2, sheet);
+            ExcelMocker.CreateMockCell("111", 2, 1, sheet);
+            ExcelMocker.CreateMockCell("222", 3, 1, sheet);
+            ExcelMocker.CreateMockCell("333", 4, 1, sheet);
 
-            CreateMockCell("0", 2, 3, sheet);
-            CreateMockCell("-", 3, 3, sheet);
-            CreateMockCell("", 4, 3, sheet);
+            ExcelMocker.CreateMockCell("1", 2, 2, sheet);
+            ExcelMocker.CreateMockCell("1", 3, 2, sheet);
+            ExcelMocker.CreateMockCell("", 4, 2, sheet);
 
-            CreateMockCell("1", 2, 4, sheet);
-            CreateMockCell("0", 3, 4, sheet);
-            CreateMockCell("0", 4, 4, sheet);
+            ExcelMocker.CreateMockCell("0", 2, 3, sheet);
+            ExcelMocker.CreateMockCell("-", 3, 3, sheet);
+            ExcelMocker.CreateMockCell("", 4, 3, sheet);
+
+            ExcelMocker.CreateMockCell("1", 2, 4, sheet);
+            ExcelMocker.CreateMockCell("0", 3, 4, sheet);
+            ExcelMocker.CreateMockCell("0", 4, 4, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
@@ -218,7 +189,7 @@ namespace Tests.ListMakerTwo
         }
 
         [Test]
-        public void SourceReaderGen2_CanGetAmounts()
+        public void SourceReader_CanGetAmounts()
         {
             /*
 
@@ -229,8 +200,8 @@ namespace Tests.ListMakerTwo
             4   444444       150          25           300
 
             */
-            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
 
             var parameters = new InputParameters();
             parameters.ElementIdSpan = range_A2A4.Object;
@@ -244,25 +215,25 @@ namespace Tests.ListMakerTwo
 
             var sheet = new Mock<IXLWorksheet>();
 
-            CreateMockCell("Henrik", 1, 2, sheet);
-            CreateMockCell("Alice", 1, 3, sheet);
-            CreateMockCell("Simpson", 1, 4, sheet);
+            ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
+            ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
+            ExcelMocker.CreateMockCell("Simpson", 1, 4, sheet);
 
-            CreateMockCell("222222", 2, 1, sheet);
-            CreateMockCell("333333", 3, 1, sheet);
-            CreateMockCell("444444", 4, 1, sheet);
+            ExcelMocker.CreateMockCell("222222", 2, 1, sheet);
+            ExcelMocker.CreateMockCell("333333", 3, 1, sheet);
+            ExcelMocker.CreateMockCell("444444", 4, 1, sheet);
 
-            CreateMockCell("100", 2, 2, sheet);
-            CreateMockCell("25", 3, 2, sheet);
-            CreateMockCell("150", 4, 2, sheet);
+            ExcelMocker.CreateMockCell("100", 2, 2, sheet);
+            ExcelMocker.CreateMockCell("25", 3, 2, sheet);
+            ExcelMocker.CreateMockCell("150", 4, 2, sheet);
 
-            CreateMockCell("50", 2, 3, sheet);
-            CreateMockCell("100", 3, 3, sheet);
-            CreateMockCell("25", 4, 3, sheet);
+            ExcelMocker.CreateMockCell("50", 2, 3, sheet);
+            ExcelMocker.CreateMockCell("100", 3, 3, sheet);
+            ExcelMocker.CreateMockCell("25", 4, 3, sheet);
 
-            CreateMockCell("75", 2, 4, sheet);
-            CreateMockCell("200", 3, 4, sheet);
-            CreateMockCell("300", 4, 4, sheet);
+            ExcelMocker.CreateMockCell("75", 2, 4, sheet);
+            ExcelMocker.CreateMockCell("200", 3, 4, sheet);
+            ExcelMocker.CreateMockCell("300", 4, 4, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
@@ -281,7 +252,7 @@ namespace Tests.ListMakerTwo
         }
 
         [Test]
-        public void SourceReaderGen2_WillIgnoreZeroAndNonNumbers()
+        public void SourceReader_WillIgnoreZeroAndNonNumbers()
         {
             /*
 
@@ -292,8 +263,8 @@ namespace Tests.ListMakerTwo
             4   444444       150          -            300
 
             */
-            var range_A2A4 = CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = CreateMockRange(2, 1, 4, 1);
+            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
 
             var parameters = new InputParameters();
             parameters.ElementIdSpan = range_A2A4.Object;
@@ -307,25 +278,25 @@ namespace Tests.ListMakerTwo
 
             var sheet = new Mock<IXLWorksheet>();
 
-            CreateMockCell("Henrik", 1, 2, sheet);
-            CreateMockCell("Alice", 1, 3, sheet);
-            CreateMockCell("Simpson", 1, 4, sheet);
+            ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
+            ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
+            ExcelMocker.CreateMockCell("Simpson", 1, 4, sheet);
 
-            CreateMockCell("222222", 2, 1, sheet);
-            CreateMockCell("333333", 3, 1, sheet);
-            CreateMockCell("444444", 4, 1, sheet);
+            ExcelMocker.CreateMockCell("222222", 2, 1, sheet);
+            ExcelMocker.CreateMockCell("333333", 3, 1, sheet);
+            ExcelMocker.CreateMockCell("444444", 4, 1, sheet);
 
-            CreateMockCell("100", 2, 2, sheet);
-            CreateMockCell("0", 3, 2, sheet);
-            CreateMockCell("150", 4, 2, sheet);
+            ExcelMocker.CreateMockCell("100", 2, 2, sheet);
+            ExcelMocker.CreateMockCell("0", 3, 2, sheet);
+            ExcelMocker.CreateMockCell("150", 4, 2, sheet);
 
-            CreateMockCell("50", 2, 3, sheet);
-            CreateMockCell("100", 3, 3, sheet);
-            CreateMockCell("-", 4, 3, sheet);
+            ExcelMocker.CreateMockCell("50", 2, 3, sheet);
+            ExcelMocker.CreateMockCell("100", 3, 3, sheet);
+            ExcelMocker.CreateMockCell("-", 4, 3, sheet);
 
-            CreateMockCell("", 2, 4, sheet);
-            CreateMockCell("200", 3, 4, sheet);
-            CreateMockCell("300", 4, 4, sheet);
+            ExcelMocker.CreateMockCell("", 2, 4, sheet);
+            ExcelMocker.CreateMockCell("200", 3, 4, sheet);
+            ExcelMocker.CreateMockCell("300", 4, 4, sheet);
 
             var reader = new SourceReader(sheet.Object, parameters);
 
@@ -339,5 +310,7 @@ namespace Tests.ListMakerTwo
             Assert.True(result.Any(x => x.Element.ElementID == "333333" && x.Buyer.Name == "Simpson" && x.Amount == 200));
             Assert.True(result.Any(x => x.Element.ElementID == "444444" && x.Buyer.Name == "Simpson" && x.Amount == 300));
         }
+
+        
     }
 }
