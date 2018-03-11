@@ -14,7 +14,7 @@ namespace ListMakerTwo
         {
             var _fake_sheet = new XLWorkbook().AddWorksheet("Fake");
 
-            var parameters = new InputParameters()
+            /*var parameters = new InputParameters()
             {
                 SourceFileName = "LUGBULK 2017 beställning färdig.xlsx",
                 WorksheetName = "Beställning sammanställd",
@@ -24,6 +24,18 @@ namespace ListMakerTwo
                 BrickLinkIdSpan = _fake_sheet.Range("C2:C86"),
                 BrickLinkColorSpan = _fake_sheet.Range("E2:E86"),
                 TlgColorSpan = _fake_sheet.Range("G2:G86"),
+            };*/
+
+            var parameters = new InputParameters()
+            {
+                SourceFileName = "LUGBULK 2018 Masterdata - Henrik Copy.xlsx",
+                WorksheetName = "Beställningar",
+                ElementIdSpan = _fake_sheet.Range("D1:CJ1"),
+                BuyersSpan = _fake_sheet.Range("C7:C148"),
+                BrickLinkDescriptionSpan = _fake_sheet.Range("D2:CJ2"),
+                BrickLinkIdSpan = _fake_sheet.Range("D5:CJ5"),
+                BrickLinkColorSpan = _fake_sheet.Range("D3:CJ3"),
+                TlgColorSpan = _fake_sheet.Range("D4:CJ4"),
             };
 
             var sheet = SheetRetriever.Get(parameters.SourceFileName,
@@ -31,7 +43,7 @@ namespace ListMakerTwo
 
             var reader = new SourceReader(sheet, parameters);
 
-            var base_out_put_folder = "D:\\Henrik\\LEGO\\LUGBULK2017";
+            var base_out_put_folder = "D:\\Henrik\\LEGO\\LUGBULK2018";
 
             if (!Directory.Exists(base_out_put_folder))
                 Directory.CreateDirectory(base_out_put_folder);
