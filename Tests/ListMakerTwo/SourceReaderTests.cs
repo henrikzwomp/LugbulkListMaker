@@ -53,8 +53,56 @@ namespace Tests.ListMakerTwo
             var result = reader.GetBuyers();
 
             Assert.That(result.Count, Is.EqualTo(3));
-            Assert.That(result[0].Name, Is.EqualTo("Henrik"));
-            Assert.That(result[1].Name, Is.EqualTo("Alice"));
+            Assert.That(result.Count(x => x.Name == "Henrik"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Name == "Alice"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Name == "Simpson"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Id == 100), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Id == 101), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Id == 102), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SourceReader_BuyerIdsWillFollowAlphabetically()
+        {
+            /*
+                _       Henrik      Alice   Simpson
+                111     1           0       1 
+                222     1           1       0
+                222     0           1       0
+            */
+
+            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
+            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
+
+            var parameters = new InputParameters();
+            parameters.ElementIdSpan = range_A2A4.Object;
+            parameters.BuyersSpan = range_B1D1.Object;
+
+            var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
+            ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
+            ExcelMocker.CreateMockCell("Simpson", 1, 4, sheet);
+
+            ExcelMocker.CreateMockCell("1", 2, 2, sheet);
+            ExcelMocker.CreateMockCell("0", 2, 3, sheet);
+            ExcelMocker.CreateMockCell("1", 2, 4, sheet);
+
+            ExcelMocker.CreateMockCell("1", 3, 2, sheet);
+            ExcelMocker.CreateMockCell("1", 3, 3, sheet);
+            ExcelMocker.CreateMockCell("0", 3, 4, sheet);
+
+            ExcelMocker.CreateMockCell("0", 4, 2, sheet);
+            ExcelMocker.CreateMockCell("1", 4, 3, sheet);
+            ExcelMocker.CreateMockCell("0", 4, 4, sheet);
+
+            var reader = new SourceReader(sheet.Object, parameters);
+
+            var result = reader.GetBuyers();
+
+            Assert.That(result.Count, Is.EqualTo(3));
+            Assert.That(result[0].Name, Is.EqualTo("Alice"));
+            Assert.That(result[1].Name, Is.EqualTo("Henrik"));
             Assert.That(result[2].Name, Is.EqualTo("Simpson"));
             Assert.That(result[0].Id, Is.EqualTo(100));
             Assert.That(result[1].Id, Is.EqualTo(101));
@@ -131,7 +179,6 @@ namespace Tests.ListMakerTwo
             Assert.That(result[2].MaterialColor, Is.EqualTo("Dark Green"));
         }
 
-        // ToDo Same test but with pivited table
         [Test]
         public void SourceReader_CanGetBuyersWithAReservations()
         {
@@ -182,10 +229,11 @@ namespace Tests.ListMakerTwo
             var result = reader.GetBuyers();
 
             Assert.That(result.Count, Is.EqualTo(2));
-            Assert.That(result[0].Name, Is.EqualTo("Henrik"));
-            Assert.That(result[1].Name, Is.EqualTo("Simpson"));
-            Assert.That(result[0].Id, Is.EqualTo(100));
-            Assert.That(result[1].Id, Is.EqualTo(101));
+            Assert.That(result.Count(x => x.Name == "Henrik"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Name == "Simpson"), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Id == 100), Is.EqualTo(1));
+            Assert.That(result.Count(x => x.Id == 101), Is.EqualTo(1));
+
         }
 
         [Test]

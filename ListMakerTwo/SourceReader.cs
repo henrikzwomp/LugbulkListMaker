@@ -86,8 +86,6 @@ namespace ListMakerTwo
 
             _buyers = new List<LugBulkBuyer>();
 
-            var buyer_id = 100;
-
             var first_column = _parameters.BuyersSpan.FirstColumn().ColumnNumber();
             var last_column = _parameters.BuyersSpan.LastColumn().ColumnNumber();
             var first_row = _parameters.BuyersSpan.FirstRow().RowNumber();
@@ -131,11 +129,20 @@ namespace ListMakerTwo
 
                     if (reserveration_found)
                     {
-                        _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = buyer_id });
-                        buyer_id++;
+                        _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = -1 });
                     }
 
                 }
+            }
+
+            _buyers = _buyers.OrderBy(x => x.Name).ToList();
+
+            var buyer_id = 100;
+
+            foreach(var buyer in _buyers)
+            {
+                buyer.Id = buyer_id;
+                buyer_id++;
             }
 
             return _buyers;
