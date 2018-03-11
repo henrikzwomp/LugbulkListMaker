@@ -7,8 +7,14 @@ using System.Windows.Media;
 
 namespace LugbulkListMaker
 {
+    public interface IHighlightWorker
+    {
+        void ClearHighlightColor(Color highlight);
+        void SetOrUpdateHighlightColor(Color highlight, int row_start, int row_end, int column_start, int column_end);
+    }
+
     // ToDO Test
-    public class HighlightWorker
+    public class HighlightWorker : IHighlightWorker
     {
         private IDataGridWorker _input_data_grid;
         private Dictionary<Color, HighlightSpan> _highlights;

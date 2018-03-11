@@ -26,7 +26,9 @@ namespace LugbulkListMaker
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowLogic(new OutsideWindowHelper(), new DataGridWorker(InputDataGrid));
+            var grid_worker = new DataGridWorker(InputDataGrid);
+
+            DataContext = new MainWindowLogic(new OutsideWindowHelper(), grid_worker, new HighlightWorker(grid_worker));
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

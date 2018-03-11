@@ -16,7 +16,7 @@ namespace LugbulkListMaker
         string _selected_file_path;
         IXLWorkbook _workbook = null;
         IDataGridWorker _input_data_grid;
-        HighlightWorker _highlight_worker;
+        IHighlightWorker _highlight_worker;
 
         private Color _element_id_span_highlight_color = Colors.Lavender;
         private Color _buyers_names_span_highlight_color = Colors.Moccasin;
@@ -26,11 +26,12 @@ namespace LugbulkListMaker
 
         const string _no_file_selected_text = "[None]";
 
-        public MainWindowLogic(IOutsideWindowHelper outside_helper, IDataGridWorker input_data_grid)
+        public MainWindowLogic(IOutsideWindowHelper outside_helper
+            , IDataGridWorker input_data_grid, IHighlightWorker highlight_worker)
         {
             _outside_helper = outside_helper;
             _input_data_grid = input_data_grid;
-            _highlight_worker = new HighlightWorker(_input_data_grid); // ToDo move
+            _highlight_worker = highlight_worker; // new HighlightWorker(_input_data_grid); // ToDo move
         }
 
         private void SelectAInputFile()
@@ -126,7 +127,6 @@ namespace LugbulkListMaker
 
         }
 
-        // ToDo Test
         private void ValidateSpanText(string span_text, SolidColorBrush background, Color highlight)
         {
             if(string.IsNullOrEmpty(span_text)) // Nothing entered
