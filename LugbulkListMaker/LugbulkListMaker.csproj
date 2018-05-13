@@ -69,9 +69,17 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MocGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowLogic.cs" />
+    <Compile Include="MocGrid.xaml.cs">
+      <DependentUpon>MocGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MocGridWorker.cs" />
     <Compile Include="mvvm.cs" />
     <Compile Include="OutsideWindowHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

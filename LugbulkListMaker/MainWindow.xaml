@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LugbulkListMaker"
+        
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="LUGBULK List Maker" Height="350" Width="525">
     <DockPanel LastChildFill="True" Margin="0">
@@ -62,13 +64,15 @@
             <Rectangle Grid.Row="4" Grid.Column="2" Fill="{Binding TlgColorSpanHighlightColor}" Margin="4" />
 
         </Grid>
-        <DataGrid x:Name="InputDataGrid" Margin="10" ItemsSource="{Binding FileData}"  >
+        <!--<DataGrid x:Name="InputDataGrid" Margin="10" ItemsSource="{Binding FileData}"  >
             <DataGrid.RowHeaderStyle>
                 <Style TargetType="{x:Type DataGridRowHeader}">
                     <Setter Property="Content" Value="{Binding [0]}"/>
                 </Style>
             </DataGrid.RowHeaderStyle>
-        </DataGrid>
+        </DataGrid>-->
         
+        <local:MocGrid x:Name="MocGrid" ItemsSource="{Binding FileData,
+            diag:PresentationTraceSources.TraceLevel=High}"></local:MocGrid>
     </DockPanel>
 </Window>

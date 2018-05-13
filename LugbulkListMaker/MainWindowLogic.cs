@@ -102,10 +102,6 @@ namespace LugbulkListMaker
 
             var sheet = _workbook.Worksheet(SelectedSheetIndex+1);
 
-            var x1 = sheet.LastCellUsed();
-            var x2 = x1.Address;
-            var x3 = x2.ColumnNumber;
-
             var cols = sheet.LastCellUsed().Address.ColumnNumber;
             var rows = sheet.LastCellUsed().Address.RowNumber;
 
@@ -157,7 +153,7 @@ namespace LugbulkListMaker
         private ObservableCollection<string> _sheet_names = new ObservableCollection<string>();
         private int _selected_sheet_index = -1;
         private bool _selected_sheet_combobox_enable;
-        private ObservableCollection<List<string>> _file_data = new ObservableCollection<List<string>>();
+        private ObservableCollection<IList<string>> _file_data = new ObservableCollection<IList<string>>();
         string _element_id_span_text = "";
         string _buyers_names_span_text = "";
         string _bl_desc_span_text = "";
@@ -184,7 +180,7 @@ namespace LugbulkListMaker
             }
         }
 
-        public ObservableCollection<List<string>> FileData
+        public ObservableCollection<IList<string>> FileData
         {
             get
             {
