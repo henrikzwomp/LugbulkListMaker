@@ -52,8 +52,8 @@ namespace ListMakerTwo
                     .Value.ToString(), out reservation_amount))
                     continue;
 
-                // Skip 0
-                if (reservation_amount == 0)
+                // Skip 0 and less
+                if (reservation_amount <= 0)
                     continue;
 
                 var element_id_pos = SourceReaderHelper.GetTitlePositionForValuePosition
@@ -91,43 +91,13 @@ namespace ListMakerTwo
             var first_row = _parameters.BuyersSpan.FirstRow().RowNumber();
             var last_row = _parameters.BuyersSpan.LastRow().RowNumber();
 
-            CellPosition reservations_start_pos = null;
-            CellPosition reservations_end_pos = null;
-
-            SourceReaderHelper.GetCrossRangeStartEndPositions(
-                _parameters.BuyersSpan, _parameters.ElementIdSpan, 
-                out reservations_start_pos, out reservations_end_pos);
-
             for (int current_row = first_row; current_row <= last_row; current_row++)
             {
                 for (int current_column = first_column; current_column <= last_column; current_column++)
                 {
-                    // Find a element amount
-
-                    var reservation_values = SourceReaderHelper.GetValuesForTitlePosition(
-                        new CellPosition() { Row = current_row, Column = current_column },
-                        reservations_start_pos, reservations_end_pos, _work_sheet);
-
-                    bool reserveration_found = false;
-                    foreach(var value in reservation_values)
-                    {
-                        if (value == "")
-                            continue;
-
-                        int out_value = 0;
-                        if(int.TryParse(value, out out_value))
-                        {
-                            if(out_value > 0)
-                            {
-                                reserveration_found = true;
-                                break;
-                            }
-                        }
-                    }
-
                     string buyer = _work_sheet.Cell(current_row, current_column).Value.ToString().Trim();
 
-                    if (reserveration_found)
+                    if (HasAReservation(current_row, current_column))
                     {
                         _buyers.Add(new LugBulkBuyer() { Name = buyer, Id = -1 });
                     }
@@ -148,6 +118,67 @@ namespace ListMakerTwo
             return _buyers;
         }
 
+        private CellPosition _reservations_start_pos = null;
+        private CellPosition _reservations_end_pos = null;
+
+        private CellPosition ReservationsStartPos
+        {
+            get
+            {
+                if(_reservations_start_pos == null)
+                {
+                    // ToDo duplicate code
+                    SourceReaderHelper.GetCrossRangeStartEndPositions(
+                        _parameters.BuyersSpan, _parameters.ElementIdSpan,
+                        out _reservations_start_pos, out _reservations_end_pos);
+                }
+
+                return _reservations_start_pos;
+            }
+        }
+
+        private CellPosition ReservationsEndPos
+        {
+            get
+            {
+                if (_reservations_end_pos == null)
+                {
+                    // ToDo duplicate code
+                    SourceReaderHelper.GetCrossRangeStartEndPositions(
+                        _parameters.BuyersSpan, _parameters.ElementIdSpan,
+                        out _reservations_start_pos, out _reservations_end_pos);
+                }
+
+                return _reservations_end_pos;
+            }
+        }
+
+        private bool HasAReservation(int current_row, int current_column)
+        {
+            var reservation_values = SourceReaderHelper.GetValuesForTitlePosition(
+                new CellPosition() { Row = current_row, Column = current_column },
+                ReservationsStartPos, ReservationsEndPos, _work_sheet);
+
+            bool reserveration_found = false;
+            foreach (var value in reservation_values)
+            {
+                if (value == "")
+                    continue;
+
+                int out_value = 0;
+                if (int.TryParse(value, out out_value))
+                {
+                    if (out_value > 0)
+                    {
+                        reserveration_found = true;
+                        break;
+                    }
+                }
+            }
+
+            return reserveration_found;
+        }
+
         public IList<LugBulkElement> GetElements()
         {
             if (_elements != null)
@@ -155,22 +186,38 @@ namespace ListMakerTwo
 
             _elements = new List<LugBulkElement>();
 
-            var element_id_values = ReadRangeValues(_parameters.ElementIdSpan);
             var bl_desc_values = ReadRangeValues(_parameters.BrickLinkDescriptionSpan);
             var bl_color_values = ReadRangeValues(_parameters.BrickLinkColorSpan);
             var bl_id_values = ReadRangeValues(_parameters.BrickLinkIdSpan);
             var tlg_color_values = ReadRangeValues(_parameters.TlgColorSpan);
 
-            for(int i = 0; i < element_id_values.Count; i++)
+            var first_column = _parameters.ElementIdSpan.FirstColumn().ColumnNumber();
+            var last_column = _parameters.ElementIdSpan.LastColumn().ColumnNumber();
+            var first_row = _parameters.ElementIdSpan.FirstRow().RowNumber();
+            var last_row = _parameters.ElementIdSpan.LastRow().RowNumber();
+
+            var element_counter = 0;
+
+            for (int current_row = first_row; current_row <= last_row; current_row++)
             {
-                _elements.Add(new LugBulkElement()
+                for (int current_column = first_column; current_column <= last_column; current_column++)
                 {
-                    ElementID = element_id_values[i],
-                    BricklinkDescription = bl_desc_values[i],
-                    BricklinkId = bl_id_values[i],
-                    BricklinkColor = bl_color_values[i],
-                    MaterialColor = tlg_color_values[i]
-                });
+                    if (HasAReservation(current_row, current_column))
+                    {
+                        var element_id = _work_sheet.Cell(current_row, current_column).Value.ToString().Trim();
+
+                        _elements.Add(new LugBulkElement()
+                        {
+                            ElementID = element_id,
+                            BricklinkDescription = bl_desc_values[element_counter],
+                            BricklinkId = bl_id_values[element_counter],
+                            BricklinkColor = bl_color_values[element_counter],
+                            MaterialColor = tlg_color_values[element_counter]
+                        });
+                    }
+
+                    element_counter++;
+                }
             }
 
             return _elements;
