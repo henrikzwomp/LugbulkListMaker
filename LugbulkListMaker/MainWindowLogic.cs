@@ -102,8 +102,13 @@ namespace LugbulkListMaker
 
             var sheet = _workbook.Worksheet(SelectedSheetIndex+1);
 
-            var cols = sheet.LastCellUsed().Address.ColumnNumber;
-            var rows = sheet.LastCellUsed().Address.RowNumber;
+            var last_cell = sheet.LastCellUsed();
+
+            if (last_cell == null) // Empty sheet
+                return;
+
+            var cols = last_cell.Address.ColumnNumber;
+            var rows = last_cell.Address.RowNumber;
 
             _input_data_grid.CreateColumns(cols);
             
