@@ -33,6 +33,31 @@ namespace Tests
             return range;
         }
 
+        public static void AddMockRange(Mock<IXLWorksheet> sheet, string range_string)
+        {
+            if (range_string.Length != 4)
+                throw new Exception("Range string not correct lenght (4)");
+
+            var range = CreateMockRange(
+                    LetterToInt(range_string.Substring(0,1)),
+                    int.Parse(range_string.Substring(1, 1)),
+                    LetterToInt(range_string.Substring(2, 1)),
+                    int.Parse(range_string.Substring(3, 1))
+                    );
+
+            sheet.Setup(x => x.Range(range_string)).Returns(range.Object);
+        }
+
+        private static int LetterToInt(string letter)
+        {
+            letter = letter.ToUpper();
+
+            var number = (int) letter[0];
+            var number_start = (int)'A';
+
+            return number - number_start + 1;
+        }
+
         public static void CreateMockCell(string value, int row, int column, Mock<IXLWorksheet> sheet)
         {
             var cell = CreateMockCell(value, row, column);

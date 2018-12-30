@@ -15,18 +15,16 @@ namespace Tests.ListMakerTwo
     {
         private static InputParameters GetParameters()
         {
-            var _fake_sheet = new XLWorkbook().AddWorksheet("Fake");
-
             return new InputParameters()
             {
                 SourceFileName = TestHelper.AssemblyDirectory + "ListMakerTwo\\LUGBULK 2017 beställning färdig.xlsx",
                 WorksheetName = "Beställning sammanställd",
-                ElementIdSpan = _fake_sheet.Range("D2:D86"),
-                BuyersSpan = _fake_sheet.Range("K87:FW87"),
-                BrickLinkDescriptionSpan = _fake_sheet.Range("B2:B86"),
-                BrickLinkIdSpan = _fake_sheet.Range("C2:C86"),
-                BrickLinkColorSpan = _fake_sheet.Range("E2:E86"),
-                TlgColorSpan = _fake_sheet.Range("G2:G86"),
+                ElementIdSpan = "D2:D86",
+                BuyersSpan = "K87:FW87",
+                BrickLinkDescriptionSpan = "B2:B86",
+                BrickLinkIdSpan = "C2:C86",
+                BrickLinkColorSpan = "E2:E86",
+                TlgColorSpan = "G2:G86",
             };
         }
 

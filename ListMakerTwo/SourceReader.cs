@@ -18,7 +18,12 @@ namespace ListMakerTwo
     public class SourceReader : ISourceReader
     {
         private IXLWorksheet _work_sheet;
-        private InputParameters _parameters;
+        private IXLRange _buyers_span;
+        private IXLRange _element_id_span;
+        private IXLRange _brickLink_description_span;
+        private IXLRange _brickLink_id_span;
+        private IXLRange _brickLink_color_span;
+        private IXLRange _tlg_color_span;
 
         IList<LugBulkReservation> _reservations;
         IList<LugBulkBuyer> _buyers;
@@ -27,7 +32,12 @@ namespace ListMakerTwo
         public SourceReader(IXLWorksheet work_sheet, InputParameters parameters)
         {
             _work_sheet = work_sheet;
-            _parameters = parameters;
+            _buyers_span = work_sheet.Range(parameters.BuyersSpan);
+            _element_id_span = work_sheet.Range(parameters.ElementIdSpan);
+            _brickLink_description_span = work_sheet.Range(parameters.BrickLinkDescriptionSpan);
+            _brickLink_id_span = work_sheet.Range(parameters.BrickLinkIdSpan);
+            _brickLink_color_span = work_sheet.Range(parameters.BrickLinkColorSpan);
+            _tlg_color_span = work_sheet.Range(parameters.TlgColorSpan);
         }
 
         public IList<LugBulkReservation> GetReservations()
@@ -41,7 +51,7 @@ namespace ListMakerTwo
             GetElements();
 
             var reservation_pos_list = SourceReaderHelper.GetCrossRangePositions
-                (_parameters.BuyersSpan, _parameters.ElementIdSpan);
+                (_buyers_span, _element_id_span);
 
             foreach(var reservation_pos in reservation_pos_list)
             {
@@ -57,9 +67,9 @@ namespace ListMakerTwo
                     continue;
 
                 var element_id_pos = SourceReaderHelper.GetTitlePositionForValuePosition
-                    (reservation_pos, _parameters.ElementIdSpan);
+                    (reservation_pos, _element_id_span);
                 var buyer_name_pos = SourceReaderHelper.GetTitlePositionForValuePosition
-                    (reservation_pos, _parameters.BuyersSpan);
+                    (reservation_pos, _buyers_span);
 
                 var element_id = _work_sheet.Cell(element_id_pos.Row, element_id_pos.Column)
                     .Value.ToString().Trim();
@@ -86,10 +96,10 @@ namespace ListMakerTwo
 
             _buyers = new List<LugBulkBuyer>();
 
-            var first_column = _parameters.BuyersSpan.FirstColumn().ColumnNumber();
-            var last_column = _parameters.BuyersSpan.LastColumn().ColumnNumber();
-            var first_row = _parameters.BuyersSpan.FirstRow().RowNumber();
-            var last_row = _parameters.BuyersSpan.LastRow().RowNumber();
+            var first_column = _buyers_span.FirstColumn().ColumnNumber();
+            var last_column = _buyers_span.LastColumn().ColumnNumber();
+            var first_row = _buyers_span.FirstRow().RowNumber();
+            var last_row = _buyers_span.LastRow().RowNumber();
 
             for (int current_row = first_row; current_row <= last_row; current_row++)
             {
@@ -129,7 +139,7 @@ namespace ListMakerTwo
                 {
                     // ToDo duplicate code
                     SourceReaderHelper.GetCrossRangeStartEndPositions(
-                        _parameters.BuyersSpan, _parameters.ElementIdSpan,
+                        _buyers_span, _element_id_span,
                         out _reservations_start_pos, out _reservations_end_pos);
                 }
 
@@ -145,7 +155,7 @@ namespace ListMakerTwo
                 {
                     // ToDo duplicate code
                     SourceReaderHelper.GetCrossRangeStartEndPositions(
-                        _parameters.BuyersSpan, _parameters.ElementIdSpan,
+                        _buyers_span, _element_id_span,
                         out _reservations_start_pos, out _reservations_end_pos);
                 }
 
@@ -186,15 +196,15 @@ namespace ListMakerTwo
 
             _elements = new List<LugBulkElement>();
 
-            var bl_desc_values = ReadRangeValues(_parameters.BrickLinkDescriptionSpan);
-            var bl_color_values = ReadRangeValues(_parameters.BrickLinkColorSpan);
-            var bl_id_values = ReadRangeValues(_parameters.BrickLinkIdSpan);
-            var tlg_color_values = ReadRangeValues(_parameters.TlgColorSpan);
+            var bl_desc_values = ReadRangeValues(_brickLink_description_span);
+            var bl_color_values = ReadRangeValues(_brickLink_color_span);
+            var bl_id_values = ReadRangeValues(_brickLink_id_span);
+            var tlg_color_values = ReadRangeValues(_tlg_color_span);
 
-            var first_column = _parameters.ElementIdSpan.FirstColumn().ColumnNumber();
-            var last_column = _parameters.ElementIdSpan.LastColumn().ColumnNumber();
-            var first_row = _parameters.ElementIdSpan.FirstRow().RowNumber();
-            var last_row = _parameters.ElementIdSpan.LastRow().RowNumber();
+            var first_column = _element_id_span.FirstColumn().ColumnNumber();
+            var last_column = _element_id_span.LastColumn().ColumnNumber();
+            var first_row = _element_id_span.FirstRow().RowNumber();
+            var last_row = _element_id_span.LastRow().RowNumber();
 
             var element_counter = 0;
 

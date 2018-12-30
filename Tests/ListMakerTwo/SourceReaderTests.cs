@@ -23,14 +23,13 @@ namespace Tests.ListMakerTwo
                 222     0           1       0
             */
 
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
-
             var parameters = new InputParameters();
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BuyersSpan = range_B1D1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BuyersSpan = "B1D1";
 
             var sheet = new Mock<IXLWorksheet>();
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B1D1");
 
             ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
             ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
@@ -71,14 +70,13 @@ namespace Tests.ListMakerTwo
                 222     0           1       0
             */
 
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
-
             var parameters = new InputParameters();
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BuyersSpan = range_B1D1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BuyersSpan = "B1D1";
 
             var sheet = new Mock<IXLWorksheet>();
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B1D1");
 
             ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
             ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
@@ -119,23 +117,24 @@ namespace Tests.ListMakerTwo
             333         Brick3  BB3     Green       Dark Green   0           1       0
            */
 
-            var range_A2A4 = ExcelMocker.CreateMockRange(1,2,1,4);
-            var range_B2B4 = ExcelMocker.CreateMockRange(2, 2, 2, 4);
-            var range_C2C4 = ExcelMocker.CreateMockRange(3, 2, 3, 4);
-            var range_D2D4 = ExcelMocker.CreateMockRange(4, 2, 4, 4);
-            var range_E2E4 = ExcelMocker.CreateMockRange(5, 2, 5, 4);
-            var range_F1H1 = ExcelMocker.CreateMockRange(6, 1, 8, 1);
-
             var parameters = new InputParameters();
 
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BrickLinkDescriptionSpan = range_B2B4.Object;
-            parameters.BrickLinkIdSpan = range_C2C4.Object;
-            parameters.BrickLinkColorSpan = range_D2D4.Object;
-            parameters.TlgColorSpan = range_E2E4.Object;
-            parameters.BuyersSpan = range_F1H1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BrickLinkDescriptionSpan = "B2B4";
+            parameters.BrickLinkIdSpan = "C2C4";
+            parameters.BrickLinkColorSpan = "D2D4";
+            parameters.TlgColorSpan = "E2E4";
+            parameters.BuyersSpan = "F1H1";
 
             var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B2B4");
+            ExcelMocker.AddMockRange(sheet, "C2C4");
+            ExcelMocker.AddMockRange(sheet, "D2D4");
+            ExcelMocker.AddMockRange(sheet, "E2E4");
+            ExcelMocker.AddMockRange(sheet, "F1H1");
+
             ExcelMocker.CreateMockCell("111", 2, 1, sheet);
             ExcelMocker.CreateMockCell("222", 3, 1, sheet);
             ExcelMocker.CreateMockCell("333", 4, 1, sheet);
@@ -207,20 +206,20 @@ namespace Tests.ListMakerTwo
                 333                         0
             */
 
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
-
             var parameters = new InputParameters();
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BuyersSpan = range_B1D1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BuyersSpan = "B1D1";
             
             // Reusing columns to simplify test
-            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
-            parameters.BrickLinkIdSpan = range_A2A4.Object;
-            parameters.BrickLinkColorSpan = range_A2A4.Object;
-            parameters.TlgColorSpan = range_A2A4.Object;
+            parameters.BrickLinkDescriptionSpan = "A2A4";
+            parameters.BrickLinkIdSpan = "A2A4";
+            parameters.BrickLinkColorSpan = "A2A4";
+            parameters.TlgColorSpan = "A2A4";
 
             var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B1D1");
 
             ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
             ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
@@ -266,20 +265,20 @@ namespace Tests.ListMakerTwo
             4   444444       150          25           300
 
             */
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
-
             var parameters = new InputParameters();
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BuyersSpan = range_B1D1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BuyersSpan = "B1D1";
 
             // Reusing columns to simplify test
-            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
-            parameters.BrickLinkIdSpan = range_A2A4.Object;
-            parameters.BrickLinkColorSpan = range_A2A4.Object;
-            parameters.TlgColorSpan = range_A2A4.Object;
+            parameters.BrickLinkDescriptionSpan = "A2A4";
+            parameters.BrickLinkIdSpan = "A2A4";
+            parameters.BrickLinkColorSpan = "A2A4";
+            parameters.TlgColorSpan = "A2A4";
 
             var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B1D1");
 
             ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
             ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
@@ -329,20 +328,20 @@ namespace Tests.ListMakerTwo
             4   444444       150          -            300
 
             */
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
-
             var parameters = new InputParameters();
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BuyersSpan = range_B1D1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BuyersSpan = "B1D1";
 
             // Reusing columns to simplify test
-            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
-            parameters.BrickLinkIdSpan = range_A2A4.Object;
-            parameters.BrickLinkColorSpan = range_A2A4.Object;
-            parameters.TlgColorSpan = range_A2A4.Object;
+            parameters.BrickLinkDescriptionSpan = "A2A4";
+            parameters.BrickLinkIdSpan = "A2A4";
+            parameters.BrickLinkColorSpan = "A2A4";
+            parameters.TlgColorSpan = "A2A4";
 
             var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B1D1");
 
             ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
             ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
@@ -389,20 +388,20 @@ namespace Tests.ListMakerTwo
             4   444444       150          -10          300
 
             */
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B1D1 = ExcelMocker.CreateMockRange(2, 1, 4, 1);
-
             var parameters = new InputParameters();
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BuyersSpan = range_B1D1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BuyersSpan = "B1D1";
 
             // Reusing columns to simplify test
-            parameters.BrickLinkDescriptionSpan = range_A2A4.Object;
-            parameters.BrickLinkIdSpan = range_A2A4.Object;
-            parameters.BrickLinkColorSpan = range_A2A4.Object;
-            parameters.TlgColorSpan = range_A2A4.Object;
+            parameters.BrickLinkDescriptionSpan = "A2A4";
+            parameters.BrickLinkIdSpan = "A2A4";
+            parameters.BrickLinkColorSpan = "A2A4";
+            parameters.TlgColorSpan = "A2A4";
 
             var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B1D1");
 
             ExcelMocker.CreateMockCell("Henrik", 1, 2, sheet);
             ExcelMocker.CreateMockCell("Alice", 1, 3, sheet);
@@ -447,23 +446,24 @@ namespace Tests.ListMakerTwo
             333         Brick3  BB3     Green       Dark Green   1           1       1
            */
 
-            var range_A2A4 = ExcelMocker.CreateMockRange(1, 2, 1, 4);
-            var range_B2B4 = ExcelMocker.CreateMockRange(2, 2, 2, 4);
-            var range_C2C4 = ExcelMocker.CreateMockRange(3, 2, 3, 4);
-            var range_D2D4 = ExcelMocker.CreateMockRange(4, 2, 4, 4);
-            var range_E2E4 = ExcelMocker.CreateMockRange(5, 2, 5, 4);
-            var range_F1H1= ExcelMocker.CreateMockRange(6, 1, 8, 1);
-
             var parameters = new InputParameters();
 
-            parameters.ElementIdSpan = range_A2A4.Object;
-            parameters.BrickLinkDescriptionSpan = range_B2B4.Object;
-            parameters.BrickLinkIdSpan = range_C2C4.Object;
-            parameters.BrickLinkColorSpan = range_D2D4.Object;
-            parameters.TlgColorSpan = range_E2E4.Object;
-            parameters.BuyersSpan = range_F1H1.Object;
+            parameters.ElementIdSpan = "A2A4";
+            parameters.BrickLinkDescriptionSpan = "B2B4";
+            parameters.BrickLinkIdSpan = "C2C4";
+            parameters.BrickLinkColorSpan = "D2D4";
+            parameters.TlgColorSpan = "E2E4";
+            parameters.BuyersSpan = "F1H1";
 
             var sheet = new Mock<IXLWorksheet>();
+
+            ExcelMocker.AddMockRange(sheet, "A2A4");
+            ExcelMocker.AddMockRange(sheet, "B2B4");
+            ExcelMocker.AddMockRange(sheet, "C2C4");
+            ExcelMocker.AddMockRange(sheet, "D2D4");
+            ExcelMocker.AddMockRange(sheet, "E2E4");
+            ExcelMocker.AddMockRange(sheet, "F1H1");
+
             ExcelMocker.CreateMockCell("111", 2, 1, sheet);
             ExcelMocker.CreateMockCell("222", 3, 1, sheet);
             ExcelMocker.CreateMockCell("333", 4, 1, sheet);
