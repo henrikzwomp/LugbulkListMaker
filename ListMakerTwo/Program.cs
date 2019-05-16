@@ -20,9 +20,20 @@ namespace ListMakerTwo
                 InputParametersWorker.CreateSettingsFile(args);
                 return;
             }
+            if (args.Length == 3 && string.Equals(args[0], "--CreateSqlFile"
+                , StringComparison.OrdinalIgnoreCase))
+            {
+                parameters = InputParametersWorker.ReadSettingsFile(args[1]);
+                var sheet = SheetRetriever.Get(parameters.SourceFileName,
+                parameters.WorksheetName);
+                var reader = new SourceReader(sheet, parameters);
+                var sql_lines = SqlFileCreator.MakeFileForLugbulkDatabase(reader);
+                File.WriteAllLines(args[2], sql_lines);
+                return;
+            }
             if (args.Length == 1 && File.Exists(args[0]))
             {
-                parameters = InputParametersWorker.ReadSettingsFile(args);
+                parameters = InputParametersWorker.ReadSettingsFile(args[0]);
             }
             if (args.Length == 9)
             {
@@ -43,6 +54,9 @@ namespace ListMakerTwo
                 Console.WriteLine("");
                 Console.WriteLine("ListMakerTwo.exe --CreateSettingsFile [Optional settings file name]");
                 Console.WriteLine("(Default file name will be base_settings.txt)");
+                Console.WriteLine("");
+                Console.WriteLine("ListMakerTwo.exe --CreateSqlFile <settings file> <output file>");
+                
                 return;
             }
 

@@ -189,10 +189,10 @@ namespace ListMakerTwo
             File.WriteAllText(file_name, json, Encoding.UTF8);
         }
 
-        public static InputParameters ReadSettingsFile(string[] args)
+        public static InputParameters ReadSettingsFile(string file_path)
         {
             InputParameters parameters;
-            var json_string = File.ReadAllText(args[0]);
+            var json_string = File.ReadAllText(file_path);
             parameters = JsonConvert.DeserializeObject<InputParameters>(json_string);
             return parameters;
         }

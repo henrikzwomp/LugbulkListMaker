@@ -30,8 +30,6 @@ namespace ListMakerTwo
             CreateBuyerSummeryLists(reader, base_out_put_folder);
             Console.WriteLine("Creating a Master list...");
             CreateMasterlist(reader, base_out_put_folder);
-
-            // SqlFileCreator.MakeFileForLugbulkDatabase(reader);
         }
 
         private static void CreateMasterlist(SourceReader reader, string base_out_put_folder)
