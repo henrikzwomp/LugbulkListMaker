@@ -15,7 +15,6 @@ namespace LugbulkListMaker
         IOutsideWindowHelper _outside_helper;
         string _selected_file_path;
         IXLWorkbook _workbook = null;
-        IDataGridWorker _input_data_grid;
         IHighlightWorker _highlight_worker;
 
         private Color _element_id_span_highlight_color = Colors.Lavender;
@@ -26,11 +25,9 @@ namespace LugbulkListMaker
 
         const string _no_file_selected_text = "[None]";
 
-        public MainWindowLogic(IOutsideWindowHelper outside_helper
-            , IDataGridWorker input_data_grid, IHighlightWorker highlight_worker)
+        public MainWindowLogic(IOutsideWindowHelper outside_helper, IHighlightWorker highlight_worker)
         {
             _outside_helper = outside_helper;
-            _input_data_grid = input_data_grid;
             _highlight_worker = highlight_worker; // new HighlightWorker(_input_data_grid); // ToDo move
 
             //FileData.Add(new List<string>() {"Hello", "World" });
@@ -98,7 +95,6 @@ namespace LugbulkListMaker
 
             if (SelectedSheetIndex == -1)
             {
-                _input_data_grid.ClearColumns();
                 return;
             }
 
@@ -112,8 +108,6 @@ namespace LugbulkListMaker
             var cols = last_cell.Address.ColumnNumber;
             var rows = last_cell.Address.RowNumber;
 
-            _input_data_grid.CreateColumns(cols);
-            
             for (int i = 1; i <= rows; i++)
             {
                 var values = new List<string>();
@@ -124,7 +118,6 @@ namespace LugbulkListMaker
                     values.Add(sheet.Cell(i, j).Value.ToString());
                 }
 
-                //_input_data_grid.Items.Add(values);
                 result.Add(values);
             }
 

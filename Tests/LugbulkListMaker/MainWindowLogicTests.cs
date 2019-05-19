@@ -19,14 +19,13 @@ namespace Tests.LugbulkListMaker
         public void SelectingFileWillUpdateSelectFileNameProperty()
         {
             var outside_helper = new Mock<IOutsideWindowHelper>();
-            var input_data_grid = new Mock<IDataGridWorker>();
             var highlight_worker = new Mock<IHighlightWorker>();
 
             string selected_file_path = "h:\\henrik.xlsx";
 
             outside_helper.Setup(x => x.ShowLoadFileDialog(It.IsAny<string>(), out selected_file_path));
 
-            var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object, highlight_worker.Object);
+            var logic = new MainWindowLogic(outside_helper.Object, highlight_worker.Object);
 
             Assert.That(logic.SelectFileName, Is.EqualTo("[None]")); // ToDo fix.
 
@@ -40,7 +39,6 @@ namespace Tests.LugbulkListMaker
         public void SelectingFileWillLoadSheetNames()
         {
             var outside_helper = new Mock<IOutsideWindowHelper>();
-            var input_data_grid = new Mock<IDataGridWorker>();
             var workbook = new Mock<IXLWorkbook>();
             var worksheets = new Mock<IXLWorksheets>();
             var worksheet1 = new Mock<IXLWorksheet>();
@@ -63,7 +61,7 @@ namespace Tests.LugbulkListMaker
             address.Setup(x => x.ColumnNumber).Returns(0);
             address.Setup(x => x.RowNumber).Returns(0);
   
-            var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object, highlight_worker.Object);
+            var logic = new MainWindowLogic(outside_helper.Object, highlight_worker.Object);
 
             Assert.That(logic.SheetNames.Count, Is.EqualTo(0));
 
@@ -78,7 +76,6 @@ namespace Tests.LugbulkListMaker
         public void SelectingFileWillFillDataGridWithData()
         {
             var outside_helper = new Mock<IOutsideWindowHelper>();
-            var input_data_grid = new Mock<IDataGridWorker>();
             var workbook = new Mock<IXLWorkbook>();
             var worksheets = new Mock<IXLWorksheets>();
             var worksheet1 = new Mock<IXLWorksheet>();
@@ -102,7 +99,7 @@ namespace Tests.LugbulkListMaker
             address.Setup(x => x.ColumnNumber).Returns(3);
             address.Setup(x => x.RowNumber).Returns(3);
 
-            var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object, highlight_worker.Object);
+            var logic = new MainWindowLogic(outside_helper.Object, highlight_worker.Object);
 
             Assert.That(logic.FileData.Count, Is.EqualTo(0));
 
@@ -119,7 +116,6 @@ namespace Tests.LugbulkListMaker
         public void SelectingFileWillUpdateIsFileLoadedValue()
         {
             var outside_helper = new Mock<IOutsideWindowHelper>();
-            var input_data_grid = new Mock<IDataGridWorker>();
             var workbook = new Mock<IXLWorkbook>();
             var worksheets = new Mock<IXLWorksheets>();
             var worksheet1 = new Mock<IXLWorksheet>();
@@ -142,7 +138,7 @@ namespace Tests.LugbulkListMaker
             address.Setup(x => x.ColumnNumber).Returns(0);
             address.Setup(x => x.RowNumber).Returns(0);
 
-            var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object, highlight_worker.Object);
+            var logic = new MainWindowLogic(outside_helper.Object, highlight_worker.Object);
 
             Assert.That(logic.IsFileLoaded, Is.EqualTo(false));
 
@@ -155,7 +151,6 @@ namespace Tests.LugbulkListMaker
         public void ChangingSelectedSheetWillUpdateDataGrid()
         {
             var outside_helper = new Mock<IOutsideWindowHelper>();
-            var input_data_grid = new Mock<IDataGridWorker>();
             var workbook = new Mock<IXLWorkbook>();
             var worksheets = new Mock<IXLWorksheets>();
             var worksheet1 = new Mock<IXLWorksheet>();
@@ -189,7 +184,7 @@ namespace Tests.LugbulkListMaker
             address2.Setup(x => x.ColumnNumber).Returns(3);
             address2.Setup(x => x.RowNumber).Returns(3);
 
-            var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object, highlight_worker.Object);
+            var logic = new MainWindowLogic(outside_helper.Object, highlight_worker.Object);
 
             Assert.That(logic.SheetNames.Count, Is.EqualTo(0));
             Assert.That(logic.SelectedSheetIndex, Is.EqualTo(-1));
@@ -213,7 +208,6 @@ namespace Tests.LugbulkListMaker
         public void BackgroundWillChangeIfValueIsValidXLAddressOrNot()
         {
             var outside_helper = new Mock<IOutsideWindowHelper>();
-            var input_data_grid = new Mock<IDataGridWorker>();
             var highlight_worker = new Mock<IHighlightWorker>();
 
             var workbook = new Mock<IXLWorkbook>();
@@ -238,7 +232,7 @@ namespace Tests.LugbulkListMaker
             worksheet1.Setup(x => x.LastCellUsed()).Returns(cell.Object);
             worksheet1.Setup(x => x.Cell(It.IsAny<int>(), It.IsAny<int>())).Returns(cell.Object);
 
-            var logic = new MainWindowLogic(outside_helper.Object, input_data_grid.Object, highlight_worker.Object);
+            var logic = new MainWindowLogic(outside_helper.Object, highlight_worker.Object);
             logic.SelectInputFile.Execute(null);
 
             // ElementIdSpan
