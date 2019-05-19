@@ -178,35 +178,19 @@ namespace LugbulkListMaker
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
-      DependencyProperty.Register("ItemsSource", typeof(ObservableCollection<IList<string>>),
-        typeof(MocGrid)); // , new PropertyMetadata(new ObservableCollection<IList<string>>())
+      DependencyProperty.Register("ItemsSource", typeof(IList<IList<string>>),
+        typeof(MocGrid), new PropertyMetadata(new List<IList<string>>(), new PropertyChangedCallback(ItemsSourceChanged))); // 
 
-        public ObservableCollection<IList<string>> ItemsSource
+        private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get
-            {
-                var value = this.GetValue(ItemsSourceProperty) as ObservableCollection<IList<string>>;
-
-                if(value == null)
-                {
-                    value = new ObservableCollection<IList<string>>();
-                    value.CollectionChanged += Items_CollectionChanged;
-                    this.SetValue(ItemsSourceProperty, value);
-                }
-
-                return value;
-            }
-            set
-            {
-                value.CollectionChanged += Items_CollectionChanged;
-                this.SetValue(ItemsSourceProperty, value);
-            }
+            var o = (MocGrid)d;
+            o.Fill(o.ItemsSource.ToList<IList<string>>());
         }
 
-        private void Items_CollectionChanged(object sender, 
-            System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        public IList<IList<string>> ItemsSource
         {
-            Fill(ItemsSource.ToList<IList<string>>());
+            get { return (IList<IList<string>>)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty,value); } // Only called by code, never by WPF
         }
     }
     

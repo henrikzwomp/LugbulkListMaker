@@ -32,6 +32,8 @@ namespace LugbulkListMaker
             _outside_helper = outside_helper;
             _input_data_grid = input_data_grid;
             _highlight_worker = highlight_worker; // new HighlightWorker(_input_data_grid); // ToDo move
+
+            //FileData.Add(new List<string>() {"Hello", "World" });
         }
 
         private void SelectAInputFile()
@@ -92,7 +94,7 @@ namespace LugbulkListMaker
 
         private void UpdateGrid()
         {
-            FileData.Clear();
+            var result = new List<IList<string>>();
 
             if (SelectedSheetIndex == -1)
             {
@@ -123,9 +125,10 @@ namespace LugbulkListMaker
                 }
 
                 //_input_data_grid.Items.Add(values);
-                FileData.Add(values);
+                result.Add(values);
             }
 
+            FileData = result;
         }
 
         private void ValidateSpanText(string span_text, SolidColorBrush background, Color highlight)
@@ -158,7 +161,7 @@ namespace LugbulkListMaker
         private ObservableCollection<string> _sheet_names = new ObservableCollection<string>();
         private int _selected_sheet_index = -1;
         private bool _selected_sheet_combobox_enable;
-        private ObservableCollection<IList<string>> _file_data = new ObservableCollection<IList<string>>();
+        private IList<IList<string>> _file_data = new List<IList<string>>();
         string _element_id_span_text = "";
         string _buyers_names_span_text = "";
         string _bl_desc_span_text = "";
@@ -174,7 +177,8 @@ namespace LugbulkListMaker
         #region Binded Properties
 
         public string SelectFileName
-        { get
+        {
+            get
             {
                 return _selected_file_name;
             }
@@ -185,11 +189,16 @@ namespace LugbulkListMaker
             }
         }
 
-        public ObservableCollection<IList<string>> FileData
+        public IList<IList<string>> FileData
         {
             get
             {
                 return _file_data;
+            }
+            set
+            {
+                _file_data = value;
+                PropertyHasChanged("FileData");
             }
         }
 
