@@ -79,7 +79,6 @@
     <Compile Include="MocGrid.xaml.cs">
       <DependentUpon>MocGrid.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MocGridWorker.cs" />
     <Compile Include="mvvm.cs" />
     <Compile Include="OutsideWindowHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
