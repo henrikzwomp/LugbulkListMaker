@@ -91,7 +91,7 @@ namespace LugbulkListMaker
 
         private void UpdateGrid()
         {
-            var result = new List<IList<string>>();
+            var result = new SheetData();
 
             if (SelectedSheetIndex == -1)
             {
@@ -110,15 +110,20 @@ namespace LugbulkListMaker
 
             for (int i = 1; i <= rows; i++)
             {
-                var values = new List<string>();
-                values.Add(i.ToString());
+                //var values = new List<string>();
+                //values.Add(i.ToString());
+
+                result.NewRow();
 
                 for (int j = 1; j <= cols; j++)
                 {
-                    values.Add(sheet.Cell(i, j).Value.ToString());
+                    //values.Add(sheet.Cell(i, j).Value.ToString());
+                    result.Add(sheet.Cell(i, j).Value.ToString());
                 }
 
-                result.Add(values);
+                
+
+                //result.Add(values);
             }
 
             FileData = result;
@@ -154,7 +159,7 @@ namespace LugbulkListMaker
         private ObservableCollection<string> _sheet_names = new ObservableCollection<string>();
         private int _selected_sheet_index = -1;
         private bool _selected_sheet_combobox_enable;
-        private IList<IList<string>> _file_data = new List<IList<string>>();
+        private SheetData _file_data = new SheetData();
         string _element_id_span_text = "";
         string _buyers_names_span_text = "";
         string _bl_desc_span_text = "";
@@ -182,7 +187,7 @@ namespace LugbulkListMaker
             }
         }
 
-        public IList<IList<string>> FileData
+        public SheetData FileData // IList<IList<string>>
         {
             get
             {

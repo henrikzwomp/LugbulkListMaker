@@ -106,10 +106,16 @@ namespace Tests.LugbulkListMaker
             logic.SelectInputFile.Execute(null);
 
             Assert.That(logic.FileData.Count, Is.EqualTo(3));
-            Assert.That(logic.FileData[0].Count, Is.EqualTo(3 + 1));
+
+            /*Assert.That(logic.FileData[0].Count, Is.EqualTo(3 + 1));
             Assert.That(logic.FileData[1].Count, Is.EqualTo(3 + 1));
             Assert.That(logic.FileData[2].Count, Is.EqualTo(3 + 1));
-            Assert.That(logic.FileData[1][1], Is.EqualTo("A Value"));
+            Assert.That(logic.FileData[1][1], Is.EqualTo("A Value"));*/
+            foreach(var item in logic.FileData)
+            {
+                Assert.That(item.Count(), Is.EqualTo(3 + 1));
+            }
+            Assert.That(logic.FileData.First().First(), Is.EqualTo("A Value"));
         }
 
         [Test]
@@ -198,10 +204,16 @@ namespace Tests.LugbulkListMaker
             logic.SelectedSheetIndex = 1;
 
             Assert.That(logic.FileData.Count, Is.EqualTo(3));
-            Assert.That(logic.FileData[0].Count, Is.EqualTo(3 + 1));
+            /*Assert.That(logic.FileData[0].Count, Is.EqualTo(3 + 1));
             Assert.That(logic.FileData[1].Count, Is.EqualTo(3 + 1));
             Assert.That(logic.FileData[2].Count, Is.EqualTo(3 + 1));
-            Assert.That(logic.FileData[1][1], Is.EqualTo("Value 2"));
+            Assert.That(logic.FileData[1][1], Is.EqualTo("Value 2"));*/
+            foreach (var item in logic.FileData)
+            {
+                Assert.That(item.Count(), Is.EqualTo(3 + 1));
+            }
+            Assert.That(logic.FileData.First().First(), Is.EqualTo("A Value"));
+
         }
 
         [Test]

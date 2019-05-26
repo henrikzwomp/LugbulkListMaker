@@ -43,7 +43,7 @@ namespace LugbulkListMaker
         bool _scale_view = false;
         int _max_columns = 0;
 
-        private void Fill(IList<IList<string>> grid_data)
+        private void Fill(IList<IList<SheetDataCell>> grid_data)
         {
             _grid_cell_parent.Children.Clear();
 
@@ -61,7 +61,7 @@ namespace LugbulkListMaker
 
                 for (int column_count = 0; column_count < grid_data[row_count].Count; column_count++)
                 {
-                    new_row.Children.Add(CreateValueCell(grid_data[row_count][column_count]));
+                    new_row.Children.Add(CreateValueCell(grid_data[row_count][column_count].CellValue));
                 }
 
                 if (_max_columns < grid_data[row_count].Count)
@@ -93,7 +93,7 @@ namespace LugbulkListMaker
             }
         }
 
-        public void ColorIn(int start_row, int start_column, int end_row, int end_column, Brush brush)
+        /*public void ColorIn(int start_row, int start_column, int end_row, int end_column, Brush brush)
         {
             if (start_row < 1)
                 start_row = 1;
@@ -114,7 +114,7 @@ namespace LugbulkListMaker
                     cell_border.Background = brush;
                 }
             }
-        }
+        }*/
 
         private static Border CreateValueCell(string text_contence)
         {
@@ -141,13 +141,18 @@ namespace LugbulkListMaker
                 HorizontalAlignment = HorizontalAlignment.Center
             };
             var title_text = new TextBlock()
-            { Width = CellWidth, FontSize = CellFontSize, Background = Brushes.LightGray };
-            title_text.Text = contence;
+            {
+                Text = contence,
+                Width = CellWidth,
+                FontSize = CellFontSize,
+                Background = Brushes.LightGray,
+                HorizontalAlignment = HorizontalAlignment.Center,
+            };
             title_border.Child = title_text;
             return title_border;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ViewButton_Click(object sender, RoutedEventArgs e)
         {
             if (_scale_view)
             {
@@ -178,20 +183,20 @@ namespace LugbulkListMaker
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
-      DependencyProperty.Register("ItemsSource", typeof(IList<IList<string>>),
-        typeof(MocGrid), new PropertyMetadata(new List<IList<string>>(), new PropertyChangedCallback(ItemsSourceChanged))); // 
+      DependencyProperty.Register("ItemsSource", typeof(SheetData),
+        typeof(MocGrid), new PropertyMetadata(new SheetData(), new PropertyChangedCallback(ItemsSourceChanged)));
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var o = (MocGrid)d;
-            o.Fill(o.ItemsSource.ToList<IList<string>>());
+            o.Fill(o.ItemsSource.ToList());
         }
 
-        public IList<IList<string>> ItemsSource
+        public SheetData ItemsSource
         {
-            get { return (IList<IList<string>>)GetValue(ItemsSourceProperty); }
+            get { return (SheetData)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty,value); } // Only called by code, never by WPF
         }
     }
-    
+
 }

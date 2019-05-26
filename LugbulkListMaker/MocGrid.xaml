@@ -16,6 +16,6 @@
         </Grid.ColumnDefinitions>
         <ScrollViewer x:Name="TheScrollViewer" IsTabStop="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="0" Grid.Column="0" ></ScrollViewer>
         <Viewbox x:Name="TheViewBox" StretchDirection="Both" Stretch="Uniform" Grid.Row="0" Grid.Column="0" ></Viewbox>
-        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="120" Click="Button_Click" >Switch View</Button>
+        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="120" Click="ViewButton_Click" >Switch View</Button>
     </Grid>
 </UserControl>
