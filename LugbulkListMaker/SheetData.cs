@@ -34,7 +34,7 @@ namespace LugbulkListMaker
             if(current_row == -1)
                 throw new Exception("Must call NewRow first"); // ToDo Test
 
-            _data[current_row].Add(new SheetDataCell() { CellValue = v, BackgroundColor = Colors.White });
+            _data[current_row].Add(new SheetDataCell() { CellValue = v, BackgroundColor = Brushes.White});
         }
 
         internal void NewRow()
@@ -54,8 +54,8 @@ namespace LugbulkListMaker
         public static readonly DependencyProperty CellValueProperty = DependencyProperty.Register("CellValue", typeof(string),
             typeof(SheetDataCell), new PropertyMetadata("")); // , new PropertyChangedCallback(ItemsSourceChanged)
 
-        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register("BackgroundColor", typeof(Color),
-            typeof(SheetDataCell), new PropertyMetadata(Colors.White)); // , new PropertyChangedCallback(ItemsSourceChanged)
+        public static readonly DependencyProperty BackgroundColorProperty = DependencyProperty.Register("BackgroundColor", typeof(Brush),
+            typeof(SheetDataCell), new PropertyMetadata(Brushes.White)); // , new PropertyChangedCallback(ItemsSourceChanged)
 
 
         public string CellValue
@@ -64,9 +64,9 @@ namespace LugbulkListMaker
             set { SetValue(CellValueProperty, value); } // Only called by code, never by WPF
         }
 
-        public Color BackgroundColor
+        public Brush BackgroundColor
         {
-            get { return (Color)GetValue(BackgroundColorProperty); }
+            get { return (Brush)GetValue(BackgroundColorProperty); }
             set { SetValue(BackgroundColorProperty, value); } // Only called by code, never by WPF
         }
     }

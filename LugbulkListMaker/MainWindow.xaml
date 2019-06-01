@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LugbulkListMaker"
-        
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="LUGBULK List Maker" Height="350" Width="525">
@@ -71,8 +70,7 @@
                 </Style>
             </DataGrid.RowHeaderStyle>
         </DataGrid>-->
-        
-        <local:MocGrid x:Name="MocGrid" ItemsSource="{Binding FileData,
-            diag:PresentationTraceSources.TraceLevel=High}"></local:MocGrid>
+        <!-- , diag:PresentationTraceSources.TraceLevel=High -->
+        <local:MocGrid x:Name="MocGrid" ItemsSource="{Binding FileData}" Margin="10"></local:MocGrid>
     </DockPanel>
 </Window>

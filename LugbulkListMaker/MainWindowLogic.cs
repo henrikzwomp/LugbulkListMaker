@@ -30,7 +30,14 @@ namespace LugbulkListMaker
             _outside_helper = outside_helper;
             _highlight_worker = highlight_worker; // new HighlightWorker(_input_data_grid); // ToDo move
 
-            //FileData.Add(new List<string>() {"Hello", "World" });
+            /*var xxx = new SheetData();
+            xxx.NewRow();
+            xxx.Add("A1"); xxx.Add("A2"); xxx.Add("A3"); xxx.Add("A4");
+            xxx.NewRow();
+            xxx.Add("B1"); xxx.Add("B2"); xxx.Add("B3"); xxx.Add("B4");
+            xxx.NewRow();
+            xxx.Add("C1"); xxx.Add("C2"); xxx.Add("C3"); xxx.Add("C4");
+            _file_data = xxx;*/
         }
 
         private void SelectAInputFile()
@@ -65,7 +72,7 @@ namespace LugbulkListMaker
             _workbook = _outside_helper.GetXLWorkbook(_selected_file_path);
 
             UpdateSheetNames();
-            UpdateGrid();
+            //UpdateGrid();
         }
 
         private void UpdateSheetNames()

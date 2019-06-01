@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LugbulkListMaker"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -14,8 +16,33 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ScrollViewer x:Name="TheScrollViewer" IsTabStop="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="0" Grid.Column="0" ></ScrollViewer>
-        <Viewbox x:Name="TheViewBox" StretchDirection="Both" Stretch="Uniform" Grid.Row="0" Grid.Column="0" ></Viewbox>
+        <Border Grid.Row="0" Grid.Column="0" BorderThickness="2" BorderBrush="Black" >
+            <ItemsControl x:Name="TestThingy" ItemsSource="{Binding ItemsSource}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ItemsControl ItemsSource="{Binding}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1" BorderBrush="LightGray" >
+                                        <TextBlock Width="30" FontSize="8" Text="{Binding CellValue }" Background="{Binding BackgroundColor, diag:PresentationTraceSources.TraceLevel=High}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
         <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="120" Click="ViewButton_Click" >Switch View</Button>
     </Grid>
 </UserControl>

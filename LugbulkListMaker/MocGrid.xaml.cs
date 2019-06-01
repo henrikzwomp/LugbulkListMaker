@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 
+using System.ComponentModel;
 using System.Globalization;
 using System.Diagnostics;
 
@@ -30,13 +31,21 @@ namespace LugbulkListMaker
         public MocGrid()
         {
             InitializeComponent();
+            TestThingy.DataContext = this;
 
             _grid_cell_parent = new StackPanel();
-            
-            InitializeComponent();
 
-            TheScrollViewer.Content = _grid_cell_parent;
+            //TheScrollViewer.Content = _grid_cell_parent;
 
+            /*var xxx = new SheetData();
+            xxx.NewRow();
+            xxx.Add("A1"); xxx.Add("A2"); xxx.Add("A3"); xxx.Add("A4");
+            xxx.NewRow();
+            xxx.Add("B1"); xxx.Add("B2"); xxx.Add("B3"); xxx.Add("B4");
+            xxx.NewRow();
+            xxx.Add("C1"); xxx.Add("C2"); xxx.Add("C3"); xxx.Add("C4");
+
+            ItemsSource = xxx;*/
         }
 
         StackPanel _grid_cell_parent;
@@ -147,6 +156,7 @@ namespace LugbulkListMaker
                 FontSize = CellFontSize,
                 Background = Brushes.LightGray,
                 HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center, 
             };
             title_border.Child = title_text;
             return title_border;
@@ -156,16 +166,25 @@ namespace LugbulkListMaker
         {
             if (_scale_view)
             {
-                TheViewBox.Child = null;
-                TheScrollViewer.Content = _grid_cell_parent;
+                //TheViewBox.Child = null;
+                //TheScrollViewer.Content = _grid_cell_parent;
                 _scale_view = false;
             }
             else
             {
-                TheScrollViewer.Content = null;
-                TheViewBox.Child = _grid_cell_parent;
+                //TheScrollViewer.Content = null;
+                //TheViewBox.Child = _grid_cell_parent;
                 _scale_view = true;
             }
+
+            /*foreach(var item in ItemsSource)
+            {
+                foreach(var item2 in item)
+                {
+                    item2.CellValue = "XXX!";
+                    item2.BackgroundColor = Brushes.AliceBlue;
+                }
+            }*/
         }
 
         private static readonly string[] letters = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
@@ -188,8 +207,8 @@ namespace LugbulkListMaker
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var o = (MocGrid)d;
-            o.Fill(o.ItemsSource.ToList());
+            //var o = (MocGrid)d;
+            //o.Fill(o.ItemsSource.ToList());
         }
 
         public SheetData ItemsSource
