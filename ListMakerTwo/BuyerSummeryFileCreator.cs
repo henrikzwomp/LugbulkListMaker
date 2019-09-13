@@ -25,7 +25,7 @@ namespace ListMakerTwo
 
             foreach (var reservation in reservations
                 .OrderBy(x => x.Element.BricklinkColor)
-                .ThenBy(x => x.Element.BricklinkDescription))
+                .ThenBy(x => x.Element.ElementID))
             {
                 if (reservation.Element.BricklinkColor != last_color)
                 {
