@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuyerSummeryFileCreator.cs" />
+    <Compile Include="CsvFileSourceReader.cs" />
     <Compile Include="ExcelCreator.cs" />
     <Compile Include="InputParameters.cs" />
     <Compile Include="InputParametersWorker.cs" />

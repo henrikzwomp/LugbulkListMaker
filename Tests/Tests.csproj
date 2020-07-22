@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="ExcelMocker.cs" />
     <Compile Include="Experiments.cs" />
+    <Compile Include="ListMakerTwo\CsvFileSourceReaderTests.cs" />
     <Compile Include="ListMakerTwo\LugBulkPicklistCreatorTests.cs" />
     <Compile Include="ListMakerTwo\PicklistXlsxFileCreatorTests.cs" />
     <Compile Include="ListMakerTwo\SettingsHelperTests.cs" />

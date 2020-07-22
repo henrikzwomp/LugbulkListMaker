@@ -10,15 +10,8 @@ namespace ListMakerTwo
 {
     class ExcelCreator
     {
-        public static void CreateAllExcelFiles(InputParameters parameters)
+        public static void CreateAllExcelFiles(ISourceReader reader, string base_out_put_folder)
         {
-            var sheet = SheetRetriever.Get(parameters.SourceFileName,
-                parameters.WorksheetName);
-
-            var reader = new SourceReader(sheet, parameters);
-
-            var base_out_put_folder = parameters.OutputFolder;
-
             if (!Directory.Exists(base_out_put_folder))
                 Directory.CreateDirectory(base_out_put_folder);
 
@@ -32,7 +25,7 @@ namespace ListMakerTwo
             CreateMasterlist(reader, base_out_put_folder);
         }
 
-        private static void CreateMasterlist(SourceReader reader, string base_out_put_folder)
+        private static void CreateMasterlist(ISourceReader reader, string base_out_put_folder)
         {
             var output_file = base_out_put_folder + "\\MasterList.xlsx";
 
@@ -70,7 +63,7 @@ namespace ListMakerTwo
             workbook.SaveAs(output_file);
         }
 
-        private static void CreateBuyerSummeryLists(SourceReader reader, string base_out_put_folder)
+        private static void CreateBuyerSummeryLists(ISourceReader reader, string base_out_put_folder)
         {
             var buyers = reader.GetBuyers();
             var reservations = reader.GetReservations();
@@ -96,7 +89,7 @@ namespace ListMakerTwo
             }
         }
 
-        private static void CreateBuyersList(SourceReader reader, string base_out_put_folder)
+        private static void CreateBuyersList(ISourceReader reader, string base_out_put_folder)
         {
             File.Copy("Templates\\ReceiversListTemplate01.xlsx", base_out_put_folder + "\\BuyersList.xlsx", true);
 
@@ -116,7 +109,7 @@ namespace ListMakerTwo
             workbook.Save();
         }
 
-        private static void CreatePicklists(SourceReader reader, string base_out_put_folder)
+        private static void CreatePicklists(ISourceReader reader, string base_out_put_folder)
         {
             var picklists = LugBulkPicklistCreator.CreateLists(reader.GetReservations(), reader.GetElements());
 
