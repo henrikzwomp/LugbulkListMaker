@@ -13,8 +13,9 @@ namespace ListMakerTwo
             IEnumerable<LugBulkReservation> reservations) // ToDo Test
         {
             work_sheet.Cell(1, "A").Value = buyer.Id + " - " + buyer.Name;
+            work_sheet.Cell(3, "A").Value = "Antal påsar: " + reservations.Count();
 
-            int line_count = 4;
+            int line_count = 5;
 
             var last_color = "";
 
